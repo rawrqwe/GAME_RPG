@@ -26,6 +26,7 @@ class CharacterClass(models.Model):
 
 class Race(models.Model):
     name = models.CharField(max_length=50)
+    description = models.TextField(blank=True)
 
     hp_bonus = models.IntegerField(default=0)
     mana_bonus = models.IntegerField(default=0)
@@ -55,6 +56,64 @@ class Character(models.Model):
     strength = models.IntegerField(default=10)
     agility = models.IntegerField(default=10)
     intelligence = models.IntegerField(default=10)
+
+    def __str__(self):
+        return self.name
+
+
+class ItemType(models.TextChoices):
+    SWORD = "SWORD", "Sword"
+    AXE = "AXE", "Axe"
+    DAGGER = "DAGGER", "Dagger"
+    BOW = "BOW", "Bow"
+    STAFF = "STAFF", "Staff"
+    SHIELD = "SHIELD", "Shield"
+    HELMET = "HELMET", "Helmet"
+    CHESTPLATE = "CHESTPLATE", "Chestplate"
+    LEGGINGS = "LEGGINGS", "Leggings"
+    BOOTS = "BOOTS", "Boots"
+    GLOVES = "GLOVES", "Gloves"
+    RING = "RING", "Ring"
+    NECKLACE = "NECKLACE", "Necklace"
+    POTION = "POTION", "Potion"
+    MATERIAL = "MATERIAL", "Material"
+    QUEST_ITEM = "QUEST_ITEM", "Quest Item"
+
+
+class ItemRarity(models.TextChoices):
+    COMMON = "COMMON", "Common"
+    UNCOMMON = "UNCOMMON", "Uncommon"
+    RARE = "RARE", "Rare"
+    EPIC = "EPIC", "Epic"
+    LEGENDARY = "LEGENDARY", "Legendary"
+    MYTHIC = "MYTHIC", "Mythic"
+
+
+class Item(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+
+    type = models.CharField(
+        max_length=20,
+        choices=ItemType.choices
+    )
+
+    rarity = models.CharField(
+        max_length=20,
+        choices=ItemRarity.choices,
+        default=ItemRarity.COMMON
+    )
+
+    required_level = models.PositiveIntegerField(default=1)
+
+    buy_price = models.PositiveIntegerField(default=0)
+    sell_price = models.PositiveIntegerField(default=0)
+
+    icon = models.ImageField(
+        upload_to="items/icons/",
+        blank=True,
+        null=True
+    )
 
     def __str__(self):
         return self.name
