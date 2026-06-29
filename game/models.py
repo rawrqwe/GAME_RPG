@@ -50,8 +50,11 @@ class Character(models.Model):
     level = models.IntegerField(default=1)
     experience = models.IntegerField(default=0)
 
-    hp = models.IntegerField(default=100)
-    mana = models.IntegerField(default=0)
+    max_hp = models.IntegerField(default=100)
+    current_hp = models.IntegerField(default=100)
+
+    max_mana = models.IntegerField(default=0)
+    current_mana = models.IntegerField(default=0)
 
     strength = models.IntegerField(default=10)
     agility = models.IntegerField(default=10)
@@ -61,47 +64,46 @@ class Character(models.Model):
         return self.name
 
 
-class ItemType(models.TextChoices):
-    SWORD = "SWORD", "Sword"
-    AXE = "AXE", "Axe"
-    DAGGER = "DAGGER", "Dagger"
-    BOW = "BOW", "Bow"
-    STAFF = "STAFF", "Staff"
-    SHIELD = "SHIELD", "Shield"
-    HELMET = "HELMET", "Helmet"
-    CHESTPLATE = "CHESTPLATE", "Chestplate"
-    LEGGINGS = "LEGGINGS", "Leggings"
-    BOOTS = "BOOTS", "Boots"
-    GLOVES = "GLOVES", "Gloves"
-    RING = "RING", "Ring"
-    NECKLACE = "NECKLACE", "Necklace"
-    POTION = "POTION", "Potion"
-    MATERIAL = "MATERIAL", "Material"
-    QUEST_ITEM = "QUEST_ITEM", "Quest Item"
-
-
-class ItemRarity(models.TextChoices):
-    COMMON = "COMMON", "Common"
-    UNCOMMON = "UNCOMMON", "Uncommon"
-    RARE = "RARE", "Rare"
-    EPIC = "EPIC", "Epic"
-    LEGENDARY = "LEGENDARY", "Legendary"
-    MYTHIC = "MYTHIC", "Mythic"
-
-
 class Item(models.Model):
+
+    class Type(models.TextChoices):
+        SWORD = "SWORD", "Sword"
+        AXE = "AXE", "Axe"
+        DAGGER = "DAGGER", "Dagger"
+        BOW = "BOW", "Bow"
+        STAFF = "STAFF", "Staff"
+        SHIELD = "SHIELD", "Shield"
+        HELMET = "HELMET", "Helmet"
+        CHESTPLATE = "CHESTPLATE", "Chestplate"
+        LEGGINGS = "LEGGINGS", "Leggings"
+        BOOTS = "BOOTS", "Boots"
+        GLOVES = "GLOVES", "Gloves"
+        RING = "RING", "Ring"
+        NECKLACE = "NECKLACE", "Necklace"
+        POTION = "POTION", "Potion"
+        MATERIAL = "MATERIAL", "Material"
+        QUEST_ITEM = "QUEST_ITEM", "Quest Item"
+
+    class Rarity(models.TextChoices):
+        COMMON = "COMMON", "Common"
+        UNCOMMON = "UNCOMMON", "Uncommon"
+        RARE = "RARE", "Rare"
+        EPIC = "EPIC", "Epic"
+        LEGENDARY = "LEGENDARY", "Legendary"
+        MYTHIC = "MYTHIC", "Mythic"
+
     name = models.CharField(max_length=100)
     description = models.TextField()
 
     type = models.CharField(
         max_length=20,
-        choices=ItemType.choices
+        choices=Type.choices
     )
 
     rarity = models.CharField(
         max_length=20,
-        choices=ItemRarity.choices,
-        default=ItemRarity.COMMON
+        choices=Rarity.choices,
+        default=Rarity.COMMON
     )
 
     required_level = models.PositiveIntegerField(default=1)
