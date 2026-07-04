@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+
+
 class Item(models.Model):
     class Type(models.TextChoices):
         # Bronie
@@ -28,8 +30,16 @@ class Item(models.Model):
         EPIC = "EPIC", "Epicki"
         LEGENDARY = "LEGENDARY", "Legendarny"
 
-    name = models.CharField(max_length=100)
-    description = models.TextField()
+    class BonusStats(models.TextChoices):
+        NONE = "NONE", "Brak"
+        STRENGTH = "STRENGTH", "Siła"
+        AGILITY = "AGILITY", "Zręczność"
+        INTELLIGENCE = "INTELLIGENCE", "Inteligencja"
+        HP = "HP", "HP"
+        MANA = "MANA", "Mana"
+
+    name = models.CharField(_("Nazwa"), max_length=100)
+    description = models.TextField(_("Opis"), blank=True)
 
     type = models.CharField(
         _("Typ"),
@@ -55,6 +65,20 @@ class Item(models.Model):
         blank=True,
         null=True
     )
+
+    power = models.IntegerField(_("Moc (obrażenia/obrona)"), default=0)
+
+    bonus_stat = models.CharField(
+        _("Bonus do statystyki"),
+        max_length=20,
+        choices=BonusStats.choices,
+        default=BonusStats.NONE
+    )
+
+    bonus_value = models.IntegerField(_("Wartość bonusu"), default=0)
+
+    # Leczenie dla mikstur
+    heal_amount = models.IntegerField(_("Leczenie hp"), default=0)
 
     def __str__(self):
         return self.name
