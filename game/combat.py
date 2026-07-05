@@ -4,7 +4,8 @@ from .models import Battle
 
 # obrażenia zadawane przez postać
 def calculate_player_damage(character, enemy):
-    attack_power = character.strength
+    weapon_power = character.equipment.weapon.power if character.equipment.weapon else 0
+    attack_power = character.strength + weapon_power
     variation = random.randint(-2, 2)
 
     defense = enemy.defense
@@ -15,10 +16,11 @@ def calculate_player_damage(character, enemy):
 
 # obrażenia zadawane postaci przez wroga
 def calculate_enemy_damage(enemy, character):
+    armor_power = character.equipment.get_total_armor_power()
     attack_power = enemy.attack
     variation = random.randint(-2, 2)
 
-    defense = character.agility // 2
+    defense = character.agility // 2 + armor_power
 
     damage = attack_power + variation - defense
     return max(damage, 1)
@@ -44,7 +46,23 @@ def enemy_attack(battle):
 
     if battle.character_current_hp <= 0:
         battle.character_current_hp = 0
-        battle.status - Battle.Status.LOSE
+        battle.status = Battle.Status.LOSE
 
     battle.save()
     return damage
+
+
+def process_turn(battle):
+    result = {"player_damage": 0, "enemy_damage": 0}
+
+    if battle.status != Battle.Status.ONGOING:
+        return result
+
+    result["player_damage"] = player_attack(battle)
+
+    if battle.status == Battle.Status.ONGOING:
+        result["enemy_damage"] = enemy_attack(battle)
+        battle.turn_number += 1
+        battle.save()
+
+    return result

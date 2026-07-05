@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
+from .items import Item
 
 
 class CharacterClass(models.Model):
@@ -20,6 +21,14 @@ class CharacterClass(models.Model):
     strength_growth = models.FloatField(_("Przyrost siły"))
     agility_growth = models.FloatField(_("Przyrost zręczności"))
     intelligence_growth = models.FloatField(_("Przyrost inteligencji"))
+
+    starting_weapon = models.ForeignKey(
+        Item,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name=_("Broń startowa")
+    )
 
     def __str__(self):
         return self.name
@@ -45,8 +54,17 @@ class Character(models.Model):
 
     name = models.CharField(_("Nazwa"), max_length=50)
 
-    race = models.ForeignKey("Race", on_delete=models.PROTECT, verbose_name=_("Rasa"))
-    character_class = models.ForeignKey("CharacterClass", on_delete=models.PROTECT, verbose_name=_("Klasa postaci"))
+    race = models.ForeignKey(
+        "Race",
+        on_delete=models.PROTECT,
+        verbose_name=_("Rasa")
+    )
+
+    character_class = models.ForeignKey(
+        "CharacterClass",
+        on_delete=models.PROTECT,
+        verbose_name=_("Klasa postaci")
+    )
 
     level = models.IntegerField(_("Poziom"), default=1)
     experience = models.IntegerField(_("Doświadczenie"), default=0)
@@ -60,6 +78,18 @@ class Character(models.Model):
     strength = models.IntegerField(_("Siła"), default=10)
     agility = models.IntegerField(_("Zręczność"), default=10)
     intelligence = models.IntegerField(_("Inteligencja"), default=10)
+
+    def save(self, *args, **kwargs):
+        from .equipment import Equipment  # import lokalny - unikamy cyklicznego importu
+
+        is_new = self.pk is None
+        super().save(*args, **kwargs)
+
+        if is_new:
+            equipment = Equipment.objects.create(character=self)
+            if self.character_class.starting_weapon:
+                equipment.weapon = self.character_class.starting_weapon
+                equipment.save()
 
     def __str__(self):
         return self.name
