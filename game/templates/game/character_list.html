@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>LISTA POSTACI</title>
+</head>
+<body>
+    <h1>Wybierz postać i przeciwnika</h1>
+
+    <h2>Twoje postacie</h2>
+    <ul>
+        {% for character in characters %}
+            <li>{{ character.name }} (poziom {{ character.level }}, HP: {{ character.current_hp }})</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Rozpocznij walkę</h2>
+    {% for character in characters %}
+        <h3>{{ character.name }}</h3>
+        <ul>
+            {% for enemy in enemies %}
+                <li>
+                    {{ enemy.name }} (poziom {{ enemy.level }}, HP: {{ enemy.max_hp }})
+                    <a href="{% url 'game:start_battle' character.id enemy.id %}">Walcz!</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+</body>
+</html>
