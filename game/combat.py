@@ -28,7 +28,7 @@ def calculate_enemy_damage(enemy, character):
 
 # postać atakuje przeciwnika. Zwraca zadane obrażenia.
 def player_attack(battle):
-    damage = calculate_player_damage(battle.character)
+    damage = calculate_player_damage(battle.character, battle.enemy)
     battle.enemy_current_hp -= damage
 
     if battle.enemy_current_hp <= 0:
@@ -41,7 +41,7 @@ def player_attack(battle):
 
 # Przeciwnik atakuje postać. Zwraca zadane obrażenia.
 def enemy_attack(battle):
-    damage = calculate_enemy_damage(battle.enemy)
+    damage = calculate_enemy_damage(battle.enemy, battle.character)
     battle.character_current_hp -= damage
 
     if battle.character_current_hp <= 0:
