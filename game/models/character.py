@@ -79,6 +79,8 @@ class Character(models.Model):
     agility = models.IntegerField(_("Zręczność"), default=10)
     intelligence = models.IntegerField(_("Inteligencja"), default=10)
 
+    gold = models.IntegerField(_("Złoto"),default=0)
+
     def save(self, *args, **kwargs):
         from .equipment import Equipment  # import lokalny - unikamy cyklicznego importu
 

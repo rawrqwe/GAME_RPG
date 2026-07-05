@@ -34,6 +34,7 @@ def player_attack(battle):
     if battle.enemy_current_hp <= 0:
         battle.enemy_current_hp = 0
         battle.status = Battle.Status.WON
+        award_battle(battle)
 
     battle.save()
     return damage
@@ -66,3 +67,12 @@ def process_turn(battle):
         battle.save()
 
     return result
+
+
+def award_battle(battle):
+    character = battle.character
+    enemy = battle.enemy
+
+    character.experience += enemy.experience_reward
+    character.gold += enemy.gold_reward
+    character.save()
