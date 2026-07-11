@@ -1,0 +1,325 @@
+[
+  {
+    "model": "game.item",
+    "pk": 1,
+    "fields": {
+      "name": "Rdzewiejący miecz",
+      "description": "Stary, zardzewiały miecz. Lepszy niż nic.",
+      "type": "SWORD",
+      "rarity": "COMMON",
+      "required_level": 1,
+      "power": 5,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 0,
+      "buy_price": 20,
+      "sell_price": 8
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 2,
+    "fields": {
+      "name": "Miecz stali",
+      "description": "Solidny miecz wykuty ze stali.",
+      "type": "SWORD",
+      "rarity": "UNCOMMON",
+      "required_level": 5,
+      "power": 12,
+      "bonus_stat": "STRENGTH",
+      "bonus_value": 2,
+      "heal_amount": 0,
+      "buy_price": 80,
+      "sell_price": 35
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 3,
+    "fields": {
+      "name": "Ognisty topór",
+      "description": "Topór owiany magicznym ogniem.",
+      "type": "SWORD",
+      "rarity": "RARE",
+      "required_level": 10,
+      "power": 20,
+      "bonus_stat": "STRENGTH",
+      "bonus_value": 5,
+      "heal_amount": 0,
+      "buy_price": 250,
+      "sell_price": 110
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 4,
+    "fields": {
+      "name": "Krótki łuk",
+      "description": "Prosty łuk dla początkujących łuczników.",
+      "type": "BOW",
+      "rarity": "COMMON",
+      "required_level": 1,
+      "power": 6,
+      "bonus_stat": "AGILITY",
+      "bonus_value": 1,
+      "heal_amount": 0,
+      "buy_price": 25,
+      "sell_price": 10
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 5,
+    "fields": {
+      "name": "Łuk elfów",
+      "description": "Precyzyjnie wykonany łuk z elfickich lasów.",
+      "type": "BOW",
+      "rarity": "RARE",
+      "required_level": 8,
+      "power": 18,
+      "bonus_stat": "AGILITY",
+      "bonus_value": 4,
+      "heal_amount": 0,
+      "buy_price": 220,
+      "sell_price": 95
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 6,
+    "fields": {
+      "name": "Laska ucznia",
+      "description": "Podstawowa laska magiczna dla adeptów.",
+      "type": "STAFF",
+      "rarity": "COMMON",
+      "required_level": 1,
+      "power": 4,
+      "bonus_stat": "INTELLIGENCE",
+      "bonus_value": 2,
+      "heal_amount": 0,
+      "buy_price": 30,
+      "sell_price": 12
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 7,
+    "fields": {
+      "name": "Laska archimaga",
+      "description": "Legendarna laska pełna arkanicznej mocy.",
+      "type": "STAFF",
+      "rarity": "LEGENDARY",
+      "required_level": 15,
+      "power": 25,
+      "bonus_stat": "INTELLIGENCE",
+      "bonus_value": 8,
+      "heal_amount": 0,
+      "buy_price": 500,
+      "sell_price": 220
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 8,
+    "fields": {
+      "name": "Skórzany hełm",
+      "description": "Lekki hełm ze skóry.",
+      "type": "HELMET",
+      "rarity": "COMMON",
+      "required_level": 1,
+      "power": 3,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 0,
+      "buy_price": 15,
+      "sell_price": 6
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 9,
+    "fields": {
+      "name": "Żelazny pancerz",
+      "description": "Solidny pancerz z kutego żelaza.",
+      "type": "ARMOR",
+      "rarity": "UNCOMMON",
+      "required_level": 5,
+      "power": 10,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 0,
+      "buy_price": 90,
+      "sell_price": 40
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 10,
+    "fields": {
+      "name": "Smocza zbroja",
+      "description": "Zbroja wykuta z łusek smoka.",
+      "type": "ARMOR",
+      "rarity": "EPIC",
+      "required_level": 12,
+      "power": 22,
+      "bonus_stat": "INTELLIGENCE",
+      "bonus_value": 3,
+      "heal_amount": 0,
+      "buy_price": 400,
+      "sell_price": 175
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 11,
+    "fields": {
+      "name": "Skórzane spodnie",
+      "description": "Wygodne spodnie ze skóry.",
+      "type": "LEGGINGS",
+      "rarity": "COMMON",
+      "required_level": 1,
+      "power": 4,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 0,
+      "buy_price": 20,
+      "sell_price": 8
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 12,
+    "fields": {
+      "name": "Rękawice zręczności",
+      "description": "Rękawice zwiększające zręczność.",
+      "type": "GLOVES",
+      "rarity": "UNCOMMON",
+      "required_level": 4,
+      "power": 3,
+      "bonus_stat": "AGILITY",
+      "bonus_value": 3,
+      "heal_amount": 0,
+      "buy_price": 70,
+      "sell_price": 30
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 13,
+    "fields": {
+      "name": "Buty wędrowca",
+      "description": "Wygodne buty na długą drogę.",
+      "type": "BOOTS",
+      "rarity": "COMMON",
+      "required_level": 1,
+      "power": 2,
+      "bonus_stat": "AGILITY",
+      "bonus_value": 1,
+      "heal_amount": 0,
+      "buy_price": 18,
+      "sell_price": 7
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 14,
+    "fields": {
+      "name": "Tarcza rycerza",
+      "description": "Solidna tarcza z herbem rycerskim.",
+      "type": "SHIELD",
+      "rarity": "UNCOMMON",
+      "required_level": 5,
+      "power": 8,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 0,
+      "buy_price": 75,
+      "sell_price": 32
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 15,
+    "fields": {
+      "name": "Mała mikstura zdrowia",
+      "description": "Przywraca niewielką ilość zdrowia.",
+      "type": "POTION",
+      "rarity": "COMMON",
+      "required_level": 1,
+      "power": 0,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 20,
+      "buy_price": 10,
+      "sell_price": 4
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 16,
+    "fields": {
+      "name": "Duża mikstura zdrowia",
+      "description": "Przywraca dużą ilość zdrowia.",
+      "type": "POTION",
+      "rarity": "UNCOMMON",
+      "required_level": 5,
+      "power": 0,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 60,
+      "buy_price": 40,
+      "sell_price": 16
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 17,
+    "fields": {
+      "name": "Eliksir maga",
+      "description": "Potężny eliksir przywracający zdrowie.",
+      "type": "POTION",
+      "rarity": "RARE",
+      "required_level": 8,
+      "power": 0,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 100,
+      "buy_price": 90,
+      "sell_price": 36
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 18,
+    "fields": {
+      "name": "Skóra wilka",
+      "description": "Surowiec pozyskany z pokonanego wilka.",
+      "type": "MATERIAL",
+      "rarity": "COMMON",
+      "required_level": 1,
+      "power": 0,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 0,
+      "buy_price": 5,
+      "sell_price": 2
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 19,
+    "fields": {
+      "name": "Klucz do lochu",
+      "description": "Tajemniczy klucz otwierający wejście do lochu.",
+      "type": "QUEST_ITEM",
+      "rarity": "COMMON",
+      "required_level": 1,
+      "power": 0,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 0,
+      "buy_price": 0,
+      "sell_price": 0
+    }
+  }
+]
