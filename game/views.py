@@ -1,14 +1,17 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Character, Enemy, Battle
+
 from .combat import process_turn
+from .models import Character, Item, InventoryItem
+from .models import Enemy, Battle
+from .shop import buy_item, ShopError, sell_item
 
 
 def character_list(request):
     characters = Character.objects.all()
-    enemies  = Enemy.objects.all()
+    enemies = Enemy.objects.all()
     return render(request, "game/character_list.html", {
         "characters": characters,
-        "enemies": enemies ,
+        "enemies": enemies,
     })
 
 
@@ -37,3 +40,42 @@ def battle_attack(request, battle_id):
     battle = get_object_or_404(Battle, id=battle_id)
     process_turn(battle)
     return redirect("game:battle_detail", battle_id=battle.id)
+
+
+def shop_detail(request, character_id):
+    character = get_object_or_404(Character, id=character_id)
+    item = Item.objects.all()
+    inventory_items = InventoryItem.objects.filter(character=character)
+
+    error_message = request.GET.get('error')
+
+    return render(request, "game/shop_detail.html", {
+        "character": character,
+        "item": item,
+        "inventory_items": inventory_items,
+        "error_message": error_message,
+    })
+
+
+def shop_buy(request, character_id, item_id):
+    character = get_object_or_404(Character, id=character_id)
+    item = get_object_or_404(Item, id=item_id)
+
+    try:
+        buy_item(character, item, quantity=1)
+    except ShopError as e:
+        return redirect(f"/game/shop/{character_id}/?error={e}")
+
+    return redirect("game:shop_detail", character_id=character_id)
+
+
+def shop_sell(request, character_id, item_id):
+    character = get_object_or_404(Character, id=character_id)
+    item = get_object_or_404(Item, id=item_id)
+
+    try:
+        sell_item(character, item, quantity=1)
+    except ShopError as e:
+        return redirect(f"/game/shop/{character_id}/?error={e}")
+
+    return redirect("game:shop_detail", character_id=character_id)

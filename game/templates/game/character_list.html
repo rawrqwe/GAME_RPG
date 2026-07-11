@@ -11,6 +11,7 @@
     <ul>
         {% for character in characters %}
             <li>{{ character.name }} (poziom {{ character.level }}, HP: {{ character.current_hp }})</li>
+        <a href="{% url 'game:shop_detail' character.id %}">Idz do sklepu</a>
         {% endfor %}
     </ul>
 

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Sklep</title>
+</head>
+<body>
+
+<h1>Sklep - {{ character.name }}</h1>
+
+<p>Złoto: {{ character.gold }}</p>
+
+{% if error_message %}
+    <p style="color: red;">{{ error_message }}</p>
+{% endif %}
+
+<h2>Przedmioty do kupienia</h2>
+<ul>
+    {% for item in items %}
+        <li>
+            {{ item.name }} ({{ item.get_type_display }}) - {{ item.buy_price }} złota
+            <form method="post" action="{% url 'game:shop_buy' character.id item.id %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit">Kup</button>
+            </form>
+        </li>
+    {% endfor %}
+</ul>
+
+<h2>Twój plecak</h2>
+<ul>
+    {% for inventory_item in inventory_items %}
+        <li>
+            {{ inventory_item.item.name }} x{{ inventory_item.quantity }}
+            (sprzedaż: {{ inventory_item.item.sell_price }} złota/szt.)
+            <form method="post" action="{% url 'game:shop_sell' character.id inventory_item.item.id %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit">Sprzedaj</button>
+            </form>
+        </li>
+    {% empty %}
+        <li>Plecak jest pusty.</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'game:character_list' %}">Powrót do listy postaci</a>
+
+</body>
+</html>
