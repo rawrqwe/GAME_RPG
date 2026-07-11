@@ -34,11 +34,18 @@ class Item(models.Model):
         STRENGTH = "STRENGTH", "Siła"
         AGILITY = "AGILITY", "Zręczność"
         INTELLIGENCE = "INTELLIGENCE", "Inteligencja"
-        HP = "HP", "HP"
+        HP = "HP", "Punkty życia"
         MANA = "MANA", "Mana"
 
-    name = models.CharField(_("Nazwa"), max_length=100)
-    description = models.TextField(_("Opis"), blank=True)
+    name = models.CharField(
+        _("Nazwa"),
+        max_length=100
+    )
+
+    description = models.TextField(
+        _("Opis"),
+        blank=True
+    )
 
     type = models.CharField(
         _("Typ"),
@@ -53,10 +60,20 @@ class Item(models.Model):
         default=Rarity.COMMON
     )
 
-    required_level = models.PositiveIntegerField(_("Wymagany poziom"), default=1)
+    required_level = models.PositiveIntegerField(
+        _("Wymagany poziom"),
+        default=1
+    )
 
-    buy_price = models.PositiveIntegerField(_("Cena zakupu"), default=0)
-    sell_price = models.PositiveIntegerField(_("Cena sprzedaży"), default=0)
+    buy_price = models.PositiveIntegerField(
+        _("Cena zakupu"),
+        default=0
+    )
+
+    sell_price = models.PositiveIntegerField(
+        _("Cena sprzedaży"),
+        default=0
+    )
 
     icon = models.ImageField(
         _("Ikona"),
@@ -65,7 +82,10 @@ class Item(models.Model):
         null=True
     )
 
-    power = models.IntegerField(_("Moc (obrażenia/obrona)"), default=0)
+    power = models.IntegerField(
+        _("Moc (obrażenia/obrona)"),
+        default=0
+    )
 
     bonus_stat = models.CharField(
         _("Bonus do statystyki"),
@@ -74,10 +94,16 @@ class Item(models.Model):
         default=BonusStats.NONE
     )
 
-    bonus_value = models.IntegerField(_("Wartość bonusu"), default=0)
+    bonus_value = models.IntegerField(
+        _("Wartość bonusu"),
+        default=0
+    )
 
     # Leczenie dla mikstur
-    heal_amount = models.IntegerField(_("Leczenie hp"), default=0)
+    heal_amount = models.IntegerField(
+        _("Leczenie hp"),
+        default=0
+    )
 
     def __str__(self):
         return self.name

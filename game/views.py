@@ -6,6 +6,7 @@ from .models import Enemy, Battle
 from .shop import buy_item, ShopError, sell_item
 
 
+# Postać
 def character_list(request):
     characters = Character.objects.all()
     enemies = Enemy.objects.all()
@@ -15,6 +16,7 @@ def character_list(request):
     })
 
 
+# Walka
 def start_battle(request, character_id, enemy_id):
     character = get_object_or_404(Character, id=character_id)
     enemy = get_object_or_404(Enemy, id=enemy_id)
@@ -42,6 +44,7 @@ def battle_attack(request, battle_id):
     return redirect("game:battle_detail", battle_id=battle.id)
 
 
+# Sklep
 def shop_detail(request, character_id):
     character = get_object_or_404(Character, id=character_id)
     items = Item.objects.all()
@@ -54,7 +57,7 @@ def shop_detail(request, character_id):
         can_afford = character.gold >= item.buy_price
         meets_level = character.level >= item.required_level
         shop_items.append({
-            "item":item,
+            "item": item,
             "can_buy": can_afford and meets_level,
             "can_afford": can_afford,
             "meets_level": meets_level,
@@ -89,3 +92,33 @@ def shop_sell(request, character_id, item_id):
         return redirect(f"/game/shop/{character_id}/?error={e}")
 
     return redirect("game:shop_detail", character_id=character_id)
+
+
+# EQ
+def equip_item(request, character_id, item_id):
+    character = get_object_or_404(Character, id=character_id)
+    item = get_object_or_404(Item, id=item_id)
+
+    try:
+        character.equipment.equip_item(item)
+    except ValueError as e:
+        return redirect(f"/game/shop/{character_id}/?error={e}")
+
+    return redirect("game:equipment_detail", character_id=character_id)
+
+
+def unequip_item(request, character_id, slot_name):
+    character = get_object_or_404(Character, id=character_id)
+    character.equipment.unequip_slot(slot_name)
+    return redirect("game:equipment_detail", character_id=character_id)
+
+def equipment_detail(request, character_id):
+    character = get_object_or_404(Character, id=character_id)
+    inventory_items = InventoryItem.objects.filter(character=character)
+    error_message = request.GET.get('error')
+
+    return render(request,"game/equipment_detail.html",{
+        "character":character,
+        "inventory_items":inventory_items,
+        "error_message":error_message,
+    })

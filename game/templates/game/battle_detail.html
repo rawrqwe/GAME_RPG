@@ -5,27 +5,29 @@
     <title>Detale bitwy</title>
 </head>
 <body>
-    <h1>{{ battle.character.name }} vs {{ battle.enemy.name }}</h1>
 
-    <p>Tura: {{ battle.turn_number }}</p>
+<h1>{{ battle.character.name }} vs {{ battle.enemy.name }}</h1>
 
-    <h2>{{ battle.character.name }}</h2>
-    <p>HP: {{ battle.character_current_hp }}</p>
+<p>Tura: {{ battle.turn_number }}</p>
 
-    <h2>{{ battle.enemy.name }}</h2>
-    <p>HP: {{ battle.enemy_current_hp }}</p>
+<h2>{{ battle.character.name }}</h2>
+<p>HP: {{ battle.character_current_hp }}</p>
 
-    <p>Status: {{ battle.get_status_display }}</p>
+<h2>{{ battle.enemy.name }}</h2>
+<p>HP: {{ battle.enemy_current_hp }}</p>
 
-    {% if battle.status == "ONGOING" %}
-        <form method="post" action="{% url 'game:battle_attack' battle.id %}">
-            {% csrf_token %}
-            <button type="submit">Atakuj!</button>
-        </form>
-    {% else %}
-        <p><strong>Walka zakończona!</strong></p>
-    {% endif %}
+<p>Status: {{ battle.get_status_display }}</p>
 
-    <a href="{% url 'game:character_list' %}">Powrót do listy</a>
+{% if battle.status == "ONGOING" %}
+    <form method="post" action="{% url 'game:battle_attack' battle.id %}">
+        {% csrf_token %}
+        <button type="submit">Atakuj!</button>
+    </form>
+{% else %}
+    <p><strong>Walka zakończona!</strong></p>
+{% endif %}
+
+<a href="{% url 'game:character_list' %}">Powrót do listy</a>
+
 </body>
 </html>

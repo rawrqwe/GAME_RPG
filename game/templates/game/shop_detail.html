@@ -52,7 +52,8 @@
     {% endfor %}
 </ul>
 
-<a href="{% url 'game:character_list' %}">Powrót do listy postaci</a>
+<p><a href="{% url 'game:equipment_detail' character.id %}">Idź do ekwipunku</a></p>
+<p><a href="{% url 'game:character_list' %}">Powrót do listy postaci</a></p>
 
 </body>
 </html>
