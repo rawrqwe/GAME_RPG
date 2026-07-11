@@ -16,13 +16,22 @@
 
 <h2>Przedmioty do kupienia</h2>
 <ul>
-    {% for item in items %}
+    {% for entry in shop_items %}
         <li>
-            {{ item.name }} ({{ item.get_type_display }}) - {{ item.buy_price }} złota
-            <form method="post" action="{% url 'game:shop_buy' character.id item.id %}" style="display: inline;">
-                {% csrf_token %}
-                <button type="submit">Kup</button>
-            </form>
+            {{ entry.item.name }} ({{ entry.item.get_type_display }})
+            - {{ entry.item.buy_price }} złota
+            - wymagany poziom: {{ entry.item.required_level }}
+
+            {% if entry.can_buy %}
+                <form method="post" action="{% url 'game:shop_buy' character.id entry.item.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit">Kup</button>
+                </form>
+            {% elif not entry.meets_level %}
+                <span style="color: gray;">(wymagany wyższy poziom)</span>
+            {% elif not entry.can_afford %}
+                <span style="color: gray;">(za mało złota)</span>
+            {% endif %}
         </li>
     {% endfor %}
 </ul>

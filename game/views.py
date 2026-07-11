@@ -44,14 +44,24 @@ def battle_attack(request, battle_id):
 
 def shop_detail(request, character_id):
     character = get_object_or_404(Character, id=character_id)
-    item = Item.objects.all()
+    items = Item.objects.all()
     inventory_items = InventoryItem.objects.filter(character=character)
 
     error_message = request.GET.get('error')
 
+    shop_items = []
+    for item in items:
+        can_afford = character.gold >= item.buy_price
+        meets_level = character.level >= item.required_level
+        shop_items.append({
+            "item":item,
+            "can_buy": can_afford and meets_level,
+            "can_afford": can_afford,
+            "meets_level": meets_level,
+        })
     return render(request, "game/shop_detail.html", {
         "character": character,
-        "item": item,
+        "shop_items": shop_items,
         "inventory_items": inventory_items,
         "error_message": error_message,
     })
