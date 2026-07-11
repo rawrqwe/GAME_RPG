@@ -13,6 +13,6 @@ urlpatterns = [
 
     #sklep
     path("shop/<int:character_id>/", views.shop_detail, name="shop_detail"),
-    path("shop/<int:character_id>/buy/<int:item_id/", views.shop_buy, name="shop_buy"),
+    path("shop/<int:character_id>/buy/<int:item_id>/", views.shop_buy, name="shop_buy"),
     path("shop/<int:character_id>/sell/<int:item_id>/", views.shop_sell, name="shop_sell"),
 ]
