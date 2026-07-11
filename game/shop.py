@@ -1,8 +1,10 @@
 from .models import InventoryItem
 
+
 class ShopError(Exception):
     """Błąd operacji sklepowej (np. za mało złota, za mało przedmiotów)."""
     pass
+
 
 def buy_item(character, item, quantity=1):
     total_cost = item.buy_price * quantity
@@ -38,7 +40,7 @@ def sell_item(character, item, quantity=1):
     character.save()
 
     inventory_item.quantity -= quantity
-    if inventory_item.quantity ==0:
+    if inventory_item.quantity == 0:
         inventory_item.delete()
     else:
         inventory_item.save()

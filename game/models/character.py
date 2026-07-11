@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 from .items import Item
 
@@ -79,10 +79,11 @@ class Character(models.Model):
     agility = models.IntegerField(_("Zręczność"), default=10)
     intelligence = models.IntegerField(_("Inteligencja"), default=10)
 
-    gold = models.IntegerField(_("Złoto"),default=0)
+    gold = models.IntegerField(_("Złoto"), default=0)
 
     def save(self, *args, **kwargs):
-        from .equipment import Equipment  # import lokalny - unikamy cyklicznego importu
+        from .equipment import Equipment
+        from .inventory import InventoryItem  # import lokalny - unikamy cyklicznego importu
 
         is_new = self.pk is None
         super().save(*args, **kwargs)
@@ -90,6 +91,12 @@ class Character(models.Model):
         if is_new:
             equipment = Equipment.objects.create(character=self)
             if self.character_class.starting_weapon:
+                weapon = self.character_class.starting_weapon
+                InventoryItem.objects.create(
+                    character=self,
+                    item=weapon,
+                    quantity=1
+                )
                 equipment.weapon = self.character_class.starting_weapon
                 equipment.save()
 
