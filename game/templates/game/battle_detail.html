@@ -29,5 +29,22 @@
 
 <a href="{% url 'game:character_list' %}">Powrót do listy</a>
 
+{% if battle.status == "ONGOING" %}
+    <h2>Mikstury</h2>
+    <ul>
+        {% for potion in potions %}
+            <li>
+                {{ potion.item.name }} x{{ potion.quantity }} (leczy {{ potion.item.heal_amount }} HP)
+                <form method="post" action="{% url 'game:battle_use_potion' battle.id potion.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit">Użyj</button>
+                </form>
+            </li>
+        {% empty %}
+            <li>Brak mikstur w plecaku.</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
 </body>
 </html>

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
-from .combat import process_turn
+from .combat import process_turn, use_potion
 from .models import Character, Item, InventoryItem
 from .models import Enemy, Battle
 from .shop import buy_item, ShopError, sell_item
@@ -33,8 +33,15 @@ def start_battle(request, character_id, enemy_id):
 
 def battle_detail(request, battle_id):
     battle = get_object_or_404(Battle, id=battle_id)
+
+    potions = InventoryItem.objects.filter(
+        character = battle.character,
+        item__type=Item.Type.POTION
+    )
+
     return render(request, "game/battle_detail.html", {
-        "battle": battle
+        "battle": battle,
+        "potions": potions,
     })
 
 
@@ -112,13 +119,23 @@ def unequip_item(request, character_id, slot_name):
     character.equipment.unequip_slot(slot_name)
     return redirect("game:equipment_detail", character_id=character_id)
 
+
 def equipment_detail(request, character_id):
     character = get_object_or_404(Character, id=character_id)
     inventory_items = InventoryItem.objects.filter(character=character)
     error_message = request.GET.get('error')
 
-    return render(request,"game/equipment_detail.html",{
-        "character":character,
-        "inventory_items":inventory_items,
-        "error_message":error_message,
+    return render(request, "game/equipment_detail.html", {
+        "character": character,
+        "inventory_items": inventory_items,
+        "error_message": error_message,
     })
+
+
+def battle_use_potion(request, battle_id, inventory_item_id):
+    battle = get_object_or_404(Battle, id=battle_id)
+    inventory_item = get_object_or_404(InventoryItem, id=inventory_item_id)
+
+    process_turn = use_potion(battle, inventory_item)
+
+    return redirect("game:battle_detail", battle_id=battle.id)

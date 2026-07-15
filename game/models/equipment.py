@@ -69,6 +69,7 @@ class Equipment(models.Model):
         verbose_name=_("Buty")
     )
 
+    # suma DEF'a
     def get_total_armor_power(self):
         armor_pieces = [self.shield, self.helmet, self.armor, self.leggings, self.gloves, self.boots]
         return sum(item.power for item in armor_pieces if item is not None)

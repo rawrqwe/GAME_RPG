@@ -1,4 +1,5 @@
 import random
+
 from .models import Battle
 
 
@@ -76,3 +77,31 @@ def award_battle(battle):
     character.experience += enemy.experience_reward
     character.gold += enemy.gold_reward
     character.save()
+
+
+def use_potion(battle, inventory_item):
+    if battle.status != Battle.Status.ONGOING:
+        return {"healed": 0, "enemy_damage": 0}
+
+    item = inventory_item.item
+    character = battle.character
+
+    heal_amount = item.heal_amount
+    new_hp = battle.character_current_hp + heal_amount
+    battle.character_current_hp = min(new_hp, character.max_hp)
+    battle.save()
+
+    inventory_item.quantity -= 1
+    if inventory_item.quantity <= 0:
+        inventory_item.delete()
+    else:
+        inventory_item.save()
+
+    result = {"healed": heal_amount, "enemy_damage": 0}
+
+    if battle.status == Battle.Status.ONGOING:
+        result["enemy_damage"] = enemy_attack(battle)
+        battle.turn_number +=1
+        battle.save()
+
+    return result

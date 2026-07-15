@@ -12,6 +12,7 @@ urlpatterns = [
     path("battle/start/<int:character_id>/<int:enemy_id>/", views.start_battle, name="start_battle"),
     path("battle/<int:battle_id>/", views.battle_detail, name="battle_detail"),
     path("battle/<int:battle_id>/attack/", views.battle_attack, name="battle_attack"),
+    path("battle/<int:battle_id>/use-potion/<int:inventory_item_id>/", views.battle_use_potion, name="battle_use_potion"),
 
     # Sklep
     path("shop/<int:character_id>/", views.shop_detail, name="shop_detail"),
