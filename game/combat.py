@@ -32,13 +32,14 @@ def player_attack(battle):
     damage = calculate_player_damage(battle.character, battle.enemy)
     battle.enemy_current_hp -= damage
 
+    leveled_up = False
     if battle.enemy_current_hp <= 0:
         battle.enemy_current_hp = 0
         battle.status = Battle.Status.WON
-        award_battle(battle)
+        leveled_up = award_rewards(battle)
 
     battle.save()
-    return damage
+    return damage, leveled_up
 
 
 # Przeciwnik atakuje postać. Zwraca zadane obrażenia.
@@ -55,12 +56,14 @@ def enemy_attack(battle):
 
 
 def process_turn(battle):
-    result = {"player_damage": 0, "enemy_damage": 0}
+    result = {"player_damage": 0, "enemy_damage": 0, "leveled_up": False}
 
     if battle.status != Battle.Status.ONGOING:
         return result
 
-    result["player_damage"] = player_attack(battle)
+    damage, leveled_up = player_attack(battle)
+    result["player_damage"] = damage
+    result["player_damage"] = leveled_up
 
     if battle.status == Battle.Status.ONGOING:
         result["enemy_damage"] = enemy_attack(battle)
@@ -105,3 +108,14 @@ def use_potion(battle, inventory_item):
         battle.save()
 
     return result
+
+def award_rewards(battle):
+    character = battle.character
+    enemy = battle.enemy
+
+    character.experience += enemy.experience_reward
+    character.gold += enemy.gold_reward
+    character.save()
+
+    leveled_up = character.try_level_up()
+    return leveled_up

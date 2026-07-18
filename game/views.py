@@ -136,6 +136,6 @@ def battle_use_potion(request, battle_id, inventory_item_id):
     battle = get_object_or_404(Battle, id=battle_id)
     inventory_item = get_object_or_404(InventoryItem, id=inventory_item_id)
 
-    process_turn = use_potion(battle, inventory_item)
+    result = use_potion(battle, inventory_item)
 
     return redirect("game:battle_detail", battle_id=battle.id)

@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
 from .items import Item
 
 
@@ -99,6 +100,32 @@ class Character(models.Model):
                 )
                 equipment.weapon = self.character_class.starting_weapon
                 equipment.save()
+
+    def get_xp_to_next_level(self):
+        return self.level * 100
+
+    def try_level_up(self):
+        leveled_up = False
+
+        while self.experience >= self.get_xp_to_next_level():
+            xp_needed = self.get_xp_to_next_level()
+            self.experience -= xp_needed
+            self.level += 1
+
+            growth = self.character_class
+            self.max_hp += int(growth.hp_growth)
+            self.max_mana += int(growth.mana_growth)
+            self.strength += int(growth.strength_growth)
+            self.agility += int(growth.agility_growth)
+            self.intelligence += int(growth.intelligence_growth)
+
+            self.current_hp = self.max_hp
+            self.current_mana = self.max_mana
+
+            leveled_up = True
+
+        self.save()
+        return leveled_up
 
     def __str__(self):
         return self.name
