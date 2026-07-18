@@ -34,6 +34,8 @@ def start_battle(request, character_id, enemy_id):
 def battle_detail(request, battle_id):
     battle = get_object_or_404(Battle, id=battle_id)
 
+    turn_result = request.session.pop(f"battle_{battle.id}_turn_result", None)
+
     potions = InventoryItem.objects.filter(
         character = battle.character,
         item__type=Item.Type.POTION
@@ -42,12 +44,14 @@ def battle_detail(request, battle_id):
     return render(request, "game/battle_detail.html", {
         "battle": battle,
         "potions": potions,
+        "turn_result": turn_result,
     })
 
 
 def battle_attack(request, battle_id):
     battle = get_object_or_404(Battle, id=battle_id)
-    process_turn(battle)
+    result = process_turn(battle)
+    request.session[f"battle_{battle.id}_turn_result"] = result
     return redirect("game:battle_detail", battle_id=battle.id)
 
 
@@ -137,5 +141,6 @@ def battle_use_potion(request, battle_id, inventory_item_id):
     inventory_item = get_object_or_404(InventoryItem, id=inventory_item_id)
 
     result = use_potion(battle, inventory_item)
+    request.session[f"battle_{battle.id}_turn_result"] = result
 
     return redirect("game:battle_detail", battle_id=battle.id)

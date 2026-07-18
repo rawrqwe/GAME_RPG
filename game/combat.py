@@ -56,14 +56,24 @@ def enemy_attack(battle):
 
 
 def process_turn(battle):
-    result = {"player_damage": 0, "enemy_damage": 0, "leveled_up": False}
+    result = {
+        "player_damage": 0,
+        "enemy_damage": 0,
+        "experience_reward": 0,
+        "gold_reward": 0,
+        "leveled_up": False,
+    }
 
     if battle.status != Battle.Status.ONGOING:
         return result
 
     damage, leveled_up = player_attack(battle)
     result["player_damage"] = damage
-    result["player_damage"] = leveled_up
+    result["leveled_up"] = leveled_up
+
+    if battle.status == Battle.Status.WON:
+        result["experience_reward"] = battle.enemy.experience_reward
+        result["gold_reward"] = battle.enemy.gold_reward
 
     if battle.status == Battle.Status.ONGOING:
         result["enemy_damage"] = enemy_attack(battle)
@@ -104,10 +114,11 @@ def use_potion(battle, inventory_item):
 
     if battle.status == Battle.Status.ONGOING:
         result["enemy_damage"] = enemy_attack(battle)
-        battle.turn_number +=1
+        battle.turn_number += 1
         battle.save()
 
     return result
+
 
 def award_rewards(battle):
     character = battle.character

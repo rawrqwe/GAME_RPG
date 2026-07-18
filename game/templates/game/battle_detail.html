@@ -18,6 +18,34 @@
 
 <p>Status: {{ battle.get_status_display }}</p>
 
+{% if turn_result %}
+    <section>
+        <h2>Przebieg ostatniej tury</h2>
+
+        {% if turn_result.player_damage %}
+            <p>
+                {{ battle.character.name }} zadaje
+                <strong>{{ turn_result.player_damage }}</strong> obrażeń.
+            </p>
+        {% endif %}
+
+        {% if turn_result.healed %}
+            <p>
+                {{ battle.character.name }} odzyskuje
+                <strong>{{ turn_result.healed }}</strong> HP.
+            </p>
+        {% endif %}
+
+        {% if turn_result.enemy_damage %}
+            <p>
+                {{ battle.enemy.name }} zadaje
+                <strong>{{ turn_result.enemy_damage }}</strong> obrażeń.
+            </p>
+        {% endif %}
+
+    </section>
+{% endif %}
+
 {% if battle.status == "ONGOING" %}
     <form method="post" action="{% url 'game:battle_attack' battle.id %}">
         {% csrf_token %}
