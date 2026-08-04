@@ -1,0 +1,72 @@
+.page-label,
+.card-label {
+    margin: 0;
+
+    color: var(--gold);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.character-card {
+    border-color: #3c6f73;
+}
+
+.character-battles + .character-battles {
+    margin-top: 32px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+}
+
+.battle-character-name {
+    margin: 0 0 16px;
+    color: var(--gold-light);
+}
+
+.enemy-grid {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(230px, 1fr)
+    );
+    gap: 16px;
+}
+
+.enemy-card {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+
+    padding: 20px;
+
+    border: 1px solid #633b45;
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #31232b,
+            var(--surface)
+        );
+}
+
+.enemy-card h3 {
+    margin: 6px 0 0;
+    font-size: 22px;
+}
+
+.enemy-description {
+    margin-bottom: 0;
+    color: var(--text-muted);
+}
+
+.fight-button {
+    width: 100%;
+    margin-top: auto;
+}
+
+@media (max-width: 700px) {
+    .enemy-grid {
+        grid-template-columns: 1fr;
+    }
+}

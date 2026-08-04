@@ -1,96 +1,313 @@
 <!DOCTYPE html>
+{% load static %}
+
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Ekwipunek</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Ekwipunek — {{ character.name }}</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'game/css/common.css' %}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{% static 'game/css/equipment.css' %}"
+    >
 </head>
+
 <body>
+<main class="page-container">
 
-<h1>Ekwipunek - {{ character.name }}</h1>
+    <header class="page-header">
+        <p class="equipment-label">Wyposażenie bohatera</p>
 
-<h2>Założony ekwipunek</h2>
+        <h1>Ekwipunek</h1>
 
-{% if error_message %}
-<p style="color: red;">{{ error_message }}</p>
-{% endif %}
-<ul>
-    <li>Broń: {{ character.equipment.weapon.name|default:"brak" }}
-        {% if character.equipment.weapon %}
-            <form method="post" action="{% url 'game:unequip_item' character.id 'weapon' %}" style="display: inline;">
-                {% csrf_token %}
-                <button type="submit">Zdejmij</button>
-            </form>
-        {% endif %}
-    </li>
-    <li>Tarcza: {{ character.equipment.shield.name|default:"brak" }}
-        {% if character.equipment.shield %}
-            <form method="post" action="{% url 'game:unequip_item' character.id 'shield' %}" style="display: inline;">
-                {% csrf_token %}
-                <button type="submit">Zdejmij</button>
-            </form>
-        {% endif %}
-    </li>
-    <li>Hełm: {{ character.equipment.helmet.name|default:"brak" }}
-        {% if character.equipment.helmet %}
-            <form method="post" action="{% url 'game:unequip_item' character.id 'helmet' %}" style="display: inline;">
-                {% csrf_token %}
-                <button type="submit">Zdejmij</button>
-            </form>
-        {% endif %}
-    </li>
-    <li>Pancerz: {{ character.equipment.armor.name|default:"brak" }}
-        {% if character.equipment.armor %}
-            <form method="post" action="{% url 'game:unequip_item' character.id 'armor' %}" style="display: inline;">
-                {% csrf_token %}
-                <button type="submit">Zdejmij</button>
-            </form>
-        {% endif %}
-    </li>
-    <li>Spodnie: {{ character.equipment.leggings.name|default:"brak" }}
-        {% if character.equipment.leggings %}
-            <form method="post" action="{% url 'game:unequip_item' character.id 'leggings' %}" style="display: inline;">
-                {% csrf_token %}
-                <button type="submit">Zdejmij</button>
-            </form>
-        {% endif %}
-    </li>
-    <li>Rękawice: {{ character.equipment.gloves.name|default:"brak" }}
-        {% if character.equipment.gloves %}
-            <form method="post" action="{% url 'game:unequip_item' character.id 'gloves' %}" style="display: inline;">
-                {% csrf_token %}
-                <button type="submit">Zdejmij</button>
-            </form>
-        {% endif %}
-    </li>
-    <li>Buty: {{ character.equipment.boots.name|default:"brak" }}
-        {% if character.equipment.boots %}
-            <form method="post" action="{% url 'game:unequip_item' character.id 'boots' %}" style="display: inline;">
-                {% csrf_token %}
-                <button type="submit">Zdejmij</button>
-            </form>
-        {% endif %}
-    </li>
-</ul>
+        <p class="page-subtitle">
+            Postać: <strong>{{ character.name }}</strong>
+        </p>
+    </header>
 
-<h2>Twój plecak</h2>
-<ul>
-    {% for inventory_item in inventory_items %}
-        <li>
-            {{ inventory_item.item.name }} x{{ inventory_item.quantity }}
-            {% if inventory_item.item.type != "POTION" and inventory_item.item.type != "MATERIAL" and inventory_item.item.type != "QUEST_ITEM" %}
-                <form method="post" action="{% url 'game:equip_item' character.id inventory_item.item.id %}" style="display: inline;">
-                    {% csrf_token %}
-                    <button type="submit">Załóż</button>
-                </form>
-            {% endif %}
-        </li>
-    {% empty %}
-        <li>Plecak jest pusty.</li>
-    {% endfor %}
-</ul>
+    {% if error_message %}
+        <p class="alert">
+            {{ error_message }}
+        </p>
+    {% endif %}
 
-<p><a href="{% url 'game:shop_detail' character.id %}">Idź do sklepu</a></p>
-<p><a href="{% url 'game:character_list' %}">Powrót do listy postaci</a></p>
+    <section class="panel">
+        <h2>Założone przedmioty</h2>
 
+        <div class="equipment-grid">
+            <article class="equipment-slot">
+                <p class="slot-name">Broń</p>
+
+                {% if character.equipment.weapon %}
+                    <h3>{{ character.equipment.weapon.name }}</h3>
+
+                    <p class="slot-stat">
+                        Moc: {{ character.equipment.weapon.power }}
+                    </p>
+
+                    <form
+                        method="post"
+                        action="{% url 'game:unequip_item' character.id 'weapon' %}"
+                    >
+                        {% csrf_token %}
+
+                        <button
+                            class="button button-danger"
+                            type="submit"
+                        >
+                            Zdejmij
+                        </button>
+                    </form>
+                {% else %}
+                    <p class="empty-slot">Brak przedmiotu</p>
+                {% endif %}
+            </article>
+
+            <article class="equipment-slot">
+                <p class="slot-name">Tarcza</p>
+
+                {% if character.equipment.shield %}
+                    <h3>{{ character.equipment.shield.name }}</h3>
+
+                    <p class="slot-stat">
+                        Obrona: {{ character.equipment.shield.power }}
+                    </p>
+
+                    <form
+                        method="post"
+                        action="{% url 'game:unequip_item' character.id 'shield' %}"
+                    >
+                        {% csrf_token %}
+
+                        <button
+                            class="button button-danger"
+                            type="submit"
+                        >
+                            Zdejmij
+                        </button>
+                    </form>
+                {% else %}
+                    <p class="empty-slot">Brak przedmiotu</p>
+                {% endif %}
+            </article>
+
+            <article class="equipment-slot">
+                <p class="slot-name">Hełm</p>
+
+                {% if character.equipment.helmet %}
+                    <h3>{{ character.equipment.helmet.name }}</h3>
+
+                    <p class="slot-stat">
+                        Obrona: {{ character.equipment.helmet.power }}
+                    </p>
+
+                    <form
+                        method="post"
+                        action="{% url 'game:unequip_item' character.id 'helmet' %}"
+                    >
+                        {% csrf_token %}
+
+                        <button
+                            class="button button-danger"
+                            type="submit"
+                        >
+                            Zdejmij
+                        </button>
+                    </form>
+                {% else %}
+                    <p class="empty-slot">Brak przedmiotu</p>
+                {% endif %}
+            </article>
+
+            <article class="equipment-slot">
+                <p class="slot-name">Pancerz</p>
+
+                {% if character.equipment.armor %}
+                    <h3>{{ character.equipment.armor.name }}</h3>
+
+                    <p class="slot-stat">
+                        Obrona: {{ character.equipment.armor.power }}
+                    </p>
+
+                    <form
+                        method="post"
+                        action="{% url 'game:unequip_item' character.id 'armor' %}"
+                    >
+                        {% csrf_token %}
+
+                        <button
+                            class="button button-danger"
+                            type="submit"
+                        >
+                            Zdejmij
+                        </button>
+                    </form>
+                {% else %}
+                    <p class="empty-slot">Brak przedmiotu</p>
+                {% endif %}
+            </article>
+
+            <article class="equipment-slot">
+                <p class="slot-name">Spodnie</p>
+
+                {% if character.equipment.leggings %}
+                    <h3>{{ character.equipment.leggings.name }}</h3>
+
+                    <p class="slot-stat">
+                        Obrona: {{ character.equipment.leggings.power }}
+                    </p>
+
+                    <form
+                        method="post"
+                        action="{% url 'game:unequip_item' character.id 'leggings' %}"
+                    >
+                        {% csrf_token %}
+
+                        <button
+                            class="button button-danger"
+                            type="submit"
+                        >
+                            Zdejmij
+                        </button>
+                    </form>
+                {% else %}
+                    <p class="empty-slot">Brak przedmiotu</p>
+                {% endif %}
+            </article>
+
+            <article class="equipment-slot">
+                <p class="slot-name">Rękawice</p>
+
+                {% if character.equipment.gloves %}
+                    <h3>{{ character.equipment.gloves.name }}</h3>
+
+                    <p class="slot-stat">
+                        Obrona: {{ character.equipment.gloves.power }}
+                    </p>
+
+                    <form
+                        method="post"
+                        action="{% url 'game:unequip_item' character.id 'gloves' %}"
+                    >
+                        {% csrf_token %}
+
+                        <button
+                            class="button button-danger"
+                            type="submit"
+                        >
+                            Zdejmij
+                        </button>
+                    </form>
+                {% else %}
+                    <p class="empty-slot">Brak przedmiotu</p>
+                {% endif %}
+            </article>
+
+            <article class="equipment-slot">
+                <p class="slot-name">Buty</p>
+
+                {% if character.equipment.boots %}
+                    <h3>{{ character.equipment.boots.name }}</h3>
+
+                    <p class="slot-stat">
+                        Obrona: {{ character.equipment.boots.power }}
+                    </p>
+
+                    <form
+                        method="post"
+                        action="{% url 'game:unequip_item' character.id 'boots' %}"
+                    >
+                        {% csrf_token %}
+
+                        <button
+                            class="button button-danger"
+                            type="submit"
+                        >
+                            Zdejmij
+                        </button>
+                    </form>
+                {% else %}
+                    <p class="empty-slot">Brak przedmiotu</p>
+                {% endif %}
+            </article>
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>Przedmioty w plecaku</h2>
+
+        <div class="inventory-grid">
+            {% for inventory_item in inventory_items %}
+                <article class="inventory-card">
+                    <div>
+                        <p class="item-type">
+                            {{ inventory_item.item.get_type_display }}
+                        </p>
+
+                        <h3>{{ inventory_item.item.name }}</h3>
+
+                        <p class="item-quantity">
+                            Liczba: {{ inventory_item.quantity }}
+                        </p>
+
+                        {% if inventory_item.item.power %}
+                            <p class="item-stat">
+                                Moc: {{ inventory_item.item.power }}
+                            </p>
+                        {% endif %}
+                    </div>
+
+                    {% if inventory_item.item.type != "POTION" and inventory_item.item.type != "MATERIAL" and inventory_item.item.type != "QUEST_ITEM" %}
+                        <form
+                            method="post"
+                            action="{% url 'game:equip_item' character.id inventory_item.item.id %}"
+                        >
+                            {% csrf_token %}
+
+                            <button
+                                class="button button-success equip-button"
+                                type="submit"
+                            >
+                                Załóż
+                            </button>
+                        </form>
+                    {% else %}
+                        <p class="non-equippable">
+                            Tego przedmiotu nie można założyć.
+                        </p>
+                    {% endif %}
+                </article>
+            {% empty %}
+                <p class="empty-message">
+                    Plecak jest pusty.
+                </p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <nav class="page-navigation">
+        <a
+            class="button button-success"
+            href="{% url 'game:shop_detail' character.id %}"
+        >
+            Sklep
+        </a>
+
+        <a
+            class="button button-secondary"
+            href="{% url 'game:character_list' %}"
+        >
+            ← Powrót do postaci
+        </a>
+    </nav>
+
+</main>
 </body>
 </html>

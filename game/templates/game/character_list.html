@@ -1,31 +1,198 @@
 <!DOCTYPE html>
+{% load static %}
+
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>LISTA POSTACI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Postacie i przeciwnicy</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'game/css/common.css' %}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{% static 'game/css/characters.css' %}"
+    >
 </head>
+
 <body>
-    <h1>Wybierz postać i przeciwnika</h1>
+<main class="page-container">
 
-    <h2>Twoje postacie</h2>
-    <ul>
-        {% for character in characters %}
-            <li>{{ character.name }} (poziom {{ character.level }}, HP: {{ character.current_hp }})</li>
-        <a href="{% url 'game:shop_detail' character.id %}">Idz do sklepu</a>
-        {% endfor %}
-    </ul>
+    <header class="page-header">
+        <p class="page-label">Panel bohaterów</p>
+        <h1>Wybierz postać i przeciwnika</h1>
 
-    <h2>Rozpocznij walkę</h2>
-    {% for character in characters %}
-        <h3>{{ character.name }}</h3>
-        <ul>
-            {% for enemy in enemies %}
-                <li>
-                    {{ enemy.name }} (poziom {{ enemy.level }}, HP: {{ enemy.max_hp }})
-                    <a href="{% url 'game:start_battle' character.id enemy.id %}">Walcz!</a>
-                </li>
+        <p class="page-subtitle">
+            Przygotuj wyposażenie, odwiedź sklep lub rozpocznij walkę.
+        </p>
+    </header>
+
+    <section class="panel">
+        <h2>Twoje postacie</h2>
+
+        <div class="card-grid">
+            {% for character in characters %}
+                <article class="card character-card">
+                    <p class="card-label">Bohater</p>
+                    <h3>{{ character.name }}</h3>
+
+                    <ul class="information-list">
+                        <li class="information-row">
+                            <span>Poziom</span>
+                            <strong>{{ character.level }}</strong>
+                        </li>
+
+                        <li class="information-row">
+                            <span>Rasa</span>
+                            <strong>{{ character.race.name }}</strong>
+                        </li>
+
+                        <li class="information-row">
+                            <span>Klasa</span>
+                            <strong>
+                                {{ character.character_class.name }}
+                            </strong>
+                        </li>
+
+                        <li class="information-row">
+                            <span>HP</span>
+                            <strong>
+                                {{ character.current_hp }}
+                                / {{ character.max_hp }}
+                            </strong>
+                        </li>
+
+                        <li class="information-row">
+                            <span>Doświadczenie</span>
+                            <strong>
+                                {{ character.experience }}
+                                / {{ character.get_xp_to_next_level }}
+                            </strong>
+                        </li>
+
+                        <li class="information-row">
+                            <span>Złoto</span>
+                            <strong class="gold-value">
+                                {{ character.gold }}
+                            </strong>
+                        </li>
+                    </ul>
+
+                    <div class="button-row">
+                        <a
+                            class="button button-secondary"
+                            href="{% url 'game:equipment_detail' character.id %}"
+                        >
+                            Ekwipunek
+                        </a>
+
+                        <a
+                            class="button button-success"
+                            href="{% url 'game:shop_detail' character.id %}"
+                        >
+                            Sklep
+                        </a>
+                    </div>
+                </article>
+            {% empty %}
+                <p class="empty-message">
+                    Nie utworzono jeszcze żadnej postaci.
+                </p>
             {% endfor %}
-        </ul>
-    {% endfor %}
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>Rozpocznij walkę</h2>
+
+        {% for character in characters %}
+            <section class="character-battles">
+                <h3 class="battle-character-name">
+                    Przeciwnicy dla: {{ character.name }}
+                </h3>
+
+                <div class="enemy-grid">
+                    {% for enemy in enemies %}
+                        <article class="enemy-card">
+                            <div>
+                                <p class="card-label">
+                                    {% if enemy.is_boss %}
+                                        Boss
+                                    {% else %}
+                                        Przeciwnik
+                                    {% endif %}
+                                </p>
+
+                                <h3>{{ enemy.name }}</h3>
+
+                                {% if enemy.description %}
+                                    <p class="enemy-description">
+                                        {{ enemy.description }}
+                                    </p>
+                                {% endif %}
+                            </div>
+
+                            <ul class="information-list">
+                                <li class="information-row">
+                                    <span>Poziom</span>
+                                    <strong>{{ enemy.level }}</strong>
+                                </li>
+
+                                <li class="information-row">
+                                    <span>HP</span>
+                                    <strong>{{ enemy.max_hp }}</strong>
+                                </li>
+
+                                <li class="information-row">
+                                    <span>Atak</span>
+                                    <strong>{{ enemy.attack }}</strong>
+                                </li>
+
+                                <li class="information-row">
+                                    <span>Obrona</span>
+                                    <strong>{{ enemy.defense }}</strong>
+                                </li>
+
+                                <li class="information-row">
+                                    <span>Nagroda XP</span>
+                                    <strong>
+                                        {{ enemy.experience_reward }}
+                                    </strong>
+                                </li>
+
+                                <li class="information-row">
+                                    <span>Nagroda złota</span>
+                                    <strong class="gold-value">
+                                        {{ enemy.gold_reward }}
+                                    </strong>
+                                </li>
+                            </ul>
+
+                            <a
+                                class="button button-primary fight-button"
+                                href="{% url 'game:start_battle' character.id enemy.id %}"
+                            >
+                                ⚔ Walcz
+                            </a>
+                        </article>
+                    {% empty %}
+                        <p class="empty-message">
+                            Brak dostępnych przeciwników.
+                        </p>
+                    {% endfor %}
+                </div>
+            </section>
+        {% empty %}
+            <p class="empty-message">
+                Potrzebujesz postaci, aby rozpocząć walkę.
+            </p>
+        {% endfor %}
+    </section>
+
+</main>
 </body>
 </html>

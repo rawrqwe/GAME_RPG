@@ -1,102 +1,244 @@
 <!DOCTYPE html>
+{% load static %}
+
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Detale bitwy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {{ battle.character.name }} vs {{ battle.enemy.name }}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'game/css/battle.css' %}"
+    >
 </head>
+
 <body>
+<main class="battle-container">
 
-<h1>{{ battle.character.name }} vs {{ battle.enemy.name }}</h1>
+    <header class="battle-header">
+        <p class="battle-turn">
+            Tura {{ battle.turn_number }}
+        </p>
 
-<p>Tura: {{ battle.turn_number }}</p>
+        <h1>
+            {{ battle.character.name }}
+            <span>vs</span>
+            {{ battle.enemy.name }}
+        </h1>
 
-<h2>{{ battle.character.name }}</h2>
-<p>HP: {{ battle.character_current_hp }}</p>
+        <p class="battle-status">
+            Status:
+            <strong>{{ battle.get_status_display }}</strong>
+        </p>
+    </header>
 
-<h2>{{ battle.enemy.name }}</h2>
-<p>HP: {{ battle.enemy_current_hp }}</p>
+    <section class="fighters">
+        <article class="fighter-card player-card">
+            <p class="fighter-label">Bohater</p>
 
-<p>Status: {{ battle.get_status_display }}</p>
+            <h2>{{ battle.character.name }}</h2>
 
-{% if turn_result %}
-    <section>
-        <h2>Przebieg ostatniej tury</h2>
+            <div class="hp-information">
+                <span>Punkty życia</span>
 
-        {% if turn_result.player_damage %}
-            <p>
-                {{ battle.character.name }} zadaje
-                <strong>{{ turn_result.player_damage }}</strong> obrażeń.
-            </p>
-        {% endif %}
+                <strong>
+                    {{ battle.character_current_hp }}
+                    / {{ battle.character.max_hp }}
+                </strong>
+            </div>
 
-        {% if turn_result.healed %}
-            <p>
-                {{ battle.character.name }} odzyskuje
-                <strong>{{ turn_result.healed }}</strong> HP.
-            </p>
-        {% endif %}
+            <progress
+                class="hp-bar player-hp"
+                value="{{ battle.character_current_hp }}"
+                max="{{ battle.character.max_hp }}"
+                aria-label="Punkty życia bohatera"
+            >
+                {{ battle.character_current_hp }}
+                / {{ battle.character.max_hp }}
+            </progress>
+        </article>
 
-        {% if turn_result.enemy_damage %}
-            <p>
-                {{ battle.enemy.name }} zadaje
-                <strong>{{ turn_result.enemy_damage }}</strong> obrażeń.
-            </p>
-        {% endif %}
+        <div class="versus">VS</div>
 
-        {% if turn_result.experience_reward or turn_result.gold_reward %}
-            <p>
-                Zdobywasz
-                <strong>{{ turn_result.experience_reward }} XP</strong>
-                oraz
-                <strong>{{ turn_result.gold_reward }} szt. złota</strong>.
-            </p>
-        {% endif %}
+        <article class="fighter-card enemy-card">
+            <p class="fighter-label">Przeciwnik</p>
 
-        {% if turn_result.leveled_up %}
-            <p>
-                <strong>Awansujesz na wyższy poziom!</strong>
-            </p>
-        {% endif %}
+            <h2>{{ battle.enemy.name }}</h2>
+
+            <div class="hp-information">
+                <span>Punkty życia</span>
+
+                <strong>
+                    {{ battle.enemy_current_hp }}
+                    / {{ battle.enemy.max_hp }}
+                </strong>
+            </div>
+
+            <progress
+                class="hp-bar enemy-hp"
+                value="{{ battle.enemy_current_hp }}"
+                max="{{ battle.enemy.max_hp }}"
+                aria-label="Punkty życia przeciwnika"
+            >
+                {{ battle.enemy_current_hp }}
+                / {{ battle.enemy.max_hp }}
+            </progress>
+        </article>
     </section>
-{% endif %}
 
-{% if battle.status == "ONGOING" %}
-    <form method="post" action="{% url 'game:battle_attack' battle.id %}">
-        {% csrf_token %}
-        <button type="submit">Atakuj!</button>
-    </form>
-{% else %}
-    <p><strong>Walka zakończona!</strong></p>
-{% endif %}
+    {% if turn_result %}
+        <section class="turn-result">
+            <h2>Przebieg ostatniej tury</h2>
 
-<a href="{% url 'game:character_list' %}">
-    Powrót do listy
-</a>
+            <div class="turn-events">
+                {% if turn_result.player_damage %}
+                    <p class="turn-event player-event">
+                        <span>⚔</span>
 
-{% if battle.status == "ONGOING" %}
-    <h2>Mikstury</h2>
+                        {{ battle.character.name }} zadaje
 
-    <ul>
-        {% for potion in potions %}
-            <li>
-                {{ potion.item.name }}
-                x{{ potion.quantity }}
-                (leczy {{ potion.item.heal_amount }} HP)
+                        <strong>
+                            {{ turn_result.player_damage }} obrażeń
+                        </strong>.
+                    </p>
+                {% endif %}
 
-                <form
-                    method="post"
-                    action="{% url 'game:battle_use_potion' battle.id potion.id %}"
-                    style="display: inline;"
-                >
-                    {% csrf_token %}
-                    <button type="submit">Użyj</button>
-                </form>
-            </li>
-        {% empty %}
-            <li>Brak mikstur w plecaku.</li>
-        {% endfor %}
-    </ul>
-{% endif %}
+                {% if turn_result.healed %}
+                    <p class="turn-event healing-event">
+                        <span>✚</span>
 
+                        {{ battle.character.name }} odzyskuje
+
+                        <strong>
+                            {{ turn_result.healed }} HP
+                        </strong>.
+                    </p>
+                {% endif %}
+
+                {% if turn_result.enemy_damage %}
+                    <p class="turn-event enemy-event">
+                        <span>☠</span>
+
+                        {{ battle.enemy.name }} zadaje
+
+                        <strong>
+                            {{ turn_result.enemy_damage }} obrażeń
+                        </strong>.
+                    </p>
+                {% endif %}
+
+                {% if turn_result.experience_reward or turn_result.gold_reward %}
+                    <p class="turn-event reward-event">
+                        <span>★</span>
+
+                        Zdobywasz
+
+                        <strong>
+                            {{ turn_result.experience_reward }} XP
+                        </strong>
+
+                        oraz
+
+                        <strong>
+                            {{ turn_result.gold_reward }} szt. złota
+                        </strong>.
+                    </p>
+                {% endif %}
+
+                {% if turn_result.leveled_up %}
+                    <p class="turn-event level-up-event">
+                        <span>⬆</span>
+
+                        <strong>
+                            Awansujesz na wyższy poziom!
+                        </strong>
+                    </p>
+                {% endif %}
+            </div>
+        </section>
+    {% endif %}
+
+    {% if battle.status == "ONGOING" %}
+        <section class="battle-actions">
+            <h2>Wybierz akcję</h2>
+
+            <form
+                method="post"
+                action="{% url 'game:battle_attack' battle.id %}"
+            >
+                {% csrf_token %}
+
+                <button class="attack-button" type="submit">
+                    ⚔ Atakuj
+                </button>
+            </form>
+        </section>
+
+        <section class="potions-section">
+            <h2>Mikstury</h2>
+
+            <ul class="potions-list">
+                {% for potion in potions %}
+                    <li class="potion-item">
+                        <div class="potion-information">
+                            <strong>{{ potion.item.name }}</strong>
+
+                            <span>
+                                Liczba: {{ potion.quantity }}
+                            </span>
+
+                            <span>
+                                Leczenie: {{ potion.item.heal_amount }} HP
+                            </span>
+                        </div>
+
+                        <form
+                            method="post"
+                            action="{% url 'game:battle_use_potion' battle.id potion.id %}"
+                        >
+                            {% csrf_token %}
+
+                            <button class="potion-button" type="submit">
+                                ✚ Użyj
+                            </button>
+                        </form>
+                    </li>
+                {% empty %}
+                    <li class="empty-potions">
+                        Brak mikstur w plecaku.
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+    {% else %}
+        {% if battle.status == "WON" %}
+            <section class="battle-end victory">
+                <p class="battle-end-icon">★</p>
+                <h2>Zwycięstwo!</h2>
+                <p>Przeciwnik został pokonany.</p>
+            </section>
+        {% elif battle.status == "LOSE" %}
+            <section class="battle-end defeat">
+                <p class="battle-end-icon">☠</p>
+                <h2>Porażka</h2>
+                <p>Twoja postać została pokonana.</p>
+            </section>
+        {% endif %}
+    {% endif %}
+
+    <footer class="battle-footer">
+        <a
+            class="back-link"
+            href="{% url 'game:character_list' %}"
+        >
+            ← Powrót do listy postaci
+        </a>
+    </footer>
+
+</main>
 </body>
 </html>
