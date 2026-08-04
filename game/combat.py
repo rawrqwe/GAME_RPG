@@ -99,9 +99,12 @@ def use_potion(battle, inventory_item):
     item = inventory_item.item
     character = battle.character
 
-    heal_amount = item.heal_amount
-    new_hp = battle.character_current_hp + heal_amount
+    hp_before_healing = battle.character_current_hp
+
+    new_hp = hp_before_healing + item.heal_amount
     battle.character_current_hp = min(new_hp, character.max_hp)
+
+    actual_healing = battle.character_current_hp - hp_before_healing
     battle.save()
 
     inventory_item.quantity -= 1
@@ -110,7 +113,7 @@ def use_potion(battle, inventory_item):
     else:
         inventory_item.save()
 
-    result = {"healed": heal_amount, "enemy_damage": 0}
+    result = {"healed": actual_healing, "enemy_damage": 0}
 
     if battle.status == Battle.Status.ONGOING:
         result["enemy_damage"] = enemy_attack(battle)

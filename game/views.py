@@ -138,7 +138,12 @@ def equipment_detail(request, character_id):
 
 def battle_use_potion(request, battle_id, inventory_item_id):
     battle = get_object_or_404(Battle, id=battle_id)
-    inventory_item = get_object_or_404(InventoryItem, id=inventory_item_id)
+    inventory_item = get_object_or_404(
+        InventoryItem,
+        id=inventory_item_id,
+        character=battle.character,
+        item__type=Item.Type.POTION,
+    )
 
     result = use_potion(battle, inventory_item)
     request.session[f"battle_{battle.id}_turn_result"] = result
