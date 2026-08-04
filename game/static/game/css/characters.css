@@ -70,3 +70,27 @@
         grid-template-columns: 1fr;
     }
 }
+
+.character-actions {
+    margin-top: 20px;
+}
+
+.battle-button {
+    width: 100%;
+}
+
+.secondary-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 10px;
+}
+
+.secondary-actions .button {
+    width: 100%;
+}
+
+@media (max-width: 500px) {
+    .secondary-actions {
+        grid-template-columns: 1fr;
+    }
+}

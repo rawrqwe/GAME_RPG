@@ -37,7 +37,7 @@ def battle_detail(request, battle_id):
     turn_result = request.session.pop(f"battle_{battle.id}_turn_result", None)
 
     potions = InventoryItem.objects.filter(
-        character = battle.character,
+        character=battle.character,
         item__type=Item.Type.POTION
     )
 
@@ -57,25 +57,72 @@ def battle_attack(request, battle_id):
 
 # Sklep
 def shop_detail(request, character_id):
-    character = get_object_or_404(Character, id=character_id)
-    items = Item.objects.all()
-    inventory_items = InventoryItem.objects.filter(character=character)
+    character = get_object_or_404(
+        Character,
+        id=character_id
+    )
 
-    error_message = request.GET.get('error')
+    items = Item.objects.all().order_by("name")
 
-    shop_items = []
+    inventory_items = InventoryItem.objects.filter(
+        character=character
+    ).select_related("item")
+
+    error_message = request.GET.get("error")
+
+    weapon_types = {
+        Item.Type.SWORD,
+        Item.Type.BOW,
+        Item.Type.STAFF,
+    }
+
+    armor_types = {
+        Item.Type.SHIELD,
+        Item.Type.HELMET,
+        Item.Type.ARMOR,
+        Item.Type.LEGGINGS,
+        Item.Type.GLOVES,
+        Item.Type.BOOTS,
+    }
+
+    shop_categories = {
+        "Broń": [],
+        "Elementy pancerza": [],
+        "Mikstury": [],
+        "Pozostałe przedmioty": [],
+    }
+
     for item in items:
         can_afford = character.gold >= item.buy_price
         meets_level = character.level >= item.required_level
-        shop_items.append({
+
+        entry = {
             "item": item,
             "can_buy": can_afford and meets_level,
             "can_afford": can_afford,
             "meets_level": meets_level,
-        })
+        }
+
+        if item.type in weapon_types:
+            category_name = "Broń"
+        elif item.type in armor_types:
+            category_name = "Elementy pancerza"
+        elif item.type == Item.Type.POTION:
+            category_name = "Mikstury"
+        else:
+            category_name = "Pozostałe przedmioty"
+
+        shop_categories[category_name].append(entry)
+
+    shop_categories = {
+        category_name: entries
+        for category_name, entries in shop_categories.items()
+        if entries
+    }
+
     return render(request, "game/shop_detail.html", {
         "character": character,
-        "shop_items": shop_items,
+        "shop_categories": shop_categories,
         "inventory_items": inventory_items,
         "error_message": error_message,
     })
@@ -149,3 +196,17 @@ def battle_use_potion(request, battle_id, inventory_item_id):
     request.session[f"battle_{battle.id}_turn_result"] = result
 
     return redirect("game:battle_detail", battle_id=battle.id)
+
+
+def battle_setup(request, character_id):
+    character = get_object_or_404(
+        Character,
+        id=character_id
+    )
+
+    enemies = Enemy.objects.all()
+
+    return render(request, "game/battle_setup.html", {
+        "character": character,
+        "enemies": enemies,
+    })

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Wybór przeciwnika — {{ character.name }}</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'game/css/common.css' %}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{% static 'game/css/battle_setup.css' %}"
+    >
+</head>
+
+<body>
+<main class="page-container">
+
+    <header class="page-header">
+        <p class="setup-label">Przygotowanie do walki</p>
+
+        <h1>Wybierz przeciwnika</h1>
+
+        <p class="page-subtitle">
+            Do walki przystępuje
+            <strong>{{ character.name }}</strong>
+        </p>
+    </header>
+
+    <section class="selected-character">
+        <div>
+            <p class="section-label">Wybrany bohater</p>
+            <h2>{{ character.name }}</h2>
+
+            <p class="character-description">
+                {{ character.race.name }}
+                ·
+                {{ character.character_class.name }}
+            </p>
+        </div>
+
+        <ul class="character-statistics">
+            <li>
+                <span>Poziom</span>
+                <strong>{{ character.level }}</strong>
+            </li>
+
+            <li>
+                <span>HP</span>
+                <strong>
+                    {{ character.current_hp }}
+                    / {{ character.max_hp }}
+                </strong>
+            </li>
+
+            <li>
+                <span>Siła</span>
+                <strong>{{ character.strength }}</strong>
+            </li>
+
+            <li>
+                <span>Zręczność</span>
+                <strong>{{ character.agility }}</strong>
+            </li>
+        </ul>
+    </section>
+
+    <section class="panel">
+        <div class="section-heading">
+            <div>
+                <p class="section-label">Arena</p>
+                <h2>Dostępni przeciwnicy</h2>
+            </div>
+
+            <p>
+                Wybierz przeciwnika, aby rozpocząć walkę.
+            </p>
+        </div>
+
+        <div class="enemy-grid">
+            {% for enemy in enemies %}
+                <article
+                    class="
+                        setup-enemy-card
+                        {% if enemy.is_boss %}boss-card{% endif %}
+                    "
+                >
+                    <div class="enemy-heading">
+                        <div>
+                            <p class="enemy-type">
+                                {% if enemy.is_boss %}
+                                    Boss
+                                {% else %}
+                                    Przeciwnik
+                                {% endif %}
+                            </p>
+
+                            <h3>{{ enemy.name }}</h3>
+                        </div>
+
+                        <span class="enemy-level">
+                            Poziom {{ enemy.level }}
+                        </span>
+                    </div>
+
+                    {% if enemy.description %}
+                        <p class="enemy-description">
+                            {{ enemy.description }}
+                        </p>
+                    {% endif %}
+
+                    <ul class="enemy-statistics">
+                        <li>
+                            <span>HP</span>
+                            <strong>{{ enemy.max_hp }}</strong>
+                        </li>
+
+                        <li>
+                            <span>Atak</span>
+                            <strong>{{ enemy.attack }}</strong>
+                        </li>
+
+                        <li>
+                            <span>Obrona</span>
+                            <strong>{{ enemy.defense }}</strong>
+                        </li>
+                    </ul>
+
+                    <div class="enemy-rewards">
+                        <p>Nagrody za zwycięstwo</p>
+
+                        <div>
+                            <span>
+                                ★ {{ enemy.experience_reward }} XP
+                            </span>
+
+                            <span>
+                                ◆ {{ enemy.gold_reward }} złota
+                            </span>
+                        </div>
+                    </div>
+
+                    <a
+                        class="button button-primary start-battle-button"
+                        href="{% url 'game:start_battle' character.id enemy.id %}"
+                    >
+                        ⚔ Rozpocznij walkę
+                    </a>
+                </article>
+            {% empty %}
+                <p class="empty-message">
+                    Nie ma obecnie dostępnych przeciwników.
+                </p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <nav class="page-navigation">
+        <a
+            class="button button-secondary"
+            href="{% url 'game:equipment_detail' character.id %}"
+        >
+            Ekwipunek
+        </a>
+
+        <a
+            class="button button-success"
+            href="{% url 'game:shop_detail' character.id %}"
+        >
+            Sklep
+        </a>
+
+        <a
+            class="button button-secondary"
+            href="{% url 'game:character_list' %}"
+        >
+            ← Zmień postać
+        </a>
+    </nav>
+
+</main>
+</body>
+</html>

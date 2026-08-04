@@ -24,6 +24,7 @@
 
     <header class="page-header">
         <p class="shop-label">Kupiec</p>
+
         <h1>Sklep</h1>
 
         <p class="page-subtitle">
@@ -37,152 +38,7 @@
         </p>
     </header>
 
-    {% if error_message %}
-        <p class="alert">
-            {{ error_message }}
-        </p>
-    {% endif %}
-
-    <section class="panel">
-        <h2>Przedmioty do kupienia</h2>
-
-        <div class="shop-grid">
-            {% for entry in shop_items %}
-                <article
-                    class="
-                        shop-item
-                        {% if not entry.can_buy %}unavailable-item{% endif %}
-                    "
-                >
-                    <div>
-                        <p class="item-type">
-                            {{ entry.item.get_type_display }}
-                        </p>
-
-                        <h3>{{ entry.item.name }}</h3>
-
-                        {% if entry.item.description %}
-                            <p class="item-description">
-                                {{ entry.item.description }}
-                            </p>
-                        {% endif %}
-                    </div>
-
-                    <ul class="information-list">
-                        <li class="information-row">
-                            <span>Rzadkość</span>
-                            <strong>
-                                {{ entry.item.get_rarity_display }}
-                            </strong>
-                        </li>
-
-                        <li class="information-row">
-                            <span>Wymagany poziom</span>
-                            <strong>
-                                {{ entry.item.required_level }}
-                            </strong>
-                        </li>
-
-                        {% if entry.item.power %}
-                            <li class="information-row">
-                                <span>Moc</span>
-                                <strong>{{ entry.item.power }}</strong>
-                            </li>
-                        {% endif %}
-
-                        {% if entry.item.heal_amount %}
-                            <li class="information-row">
-                                <span>Leczenie</span>
-                                <strong>
-                                    {{ entry.item.heal_amount }} HP
-                                </strong>
-                            </li>
-                        {% endif %}
-
-                        <li class="information-row price-row">
-                            <span>Cena</span>
-                            <strong>
-                                {{ entry.item.buy_price }} złota
-                            </strong>
-                        </li>
-                    </ul>
-
-                    {% if entry.can_buy %}
-                        <form
-                            method="post"
-                            action="{% url 'game:shop_buy' character.id entry.item.id %}"
-                        >
-                            {% csrf_token %}
-
-                            <button
-                                class="button button-success shop-button"
-                                type="submit"
-                            >
-                                Kup
-                            </button>
-                        </form>
-                    {% elif not entry.meets_level %}
-                        <p class="unavailable-reason">
-                            Wymagany jest wyższy poziom.
-                        </p>
-                    {% elif not entry.can_afford %}
-                        <p class="unavailable-reason">
-                            Masz za mało złota.
-                        </p>
-                    {% endif %}
-                </article>
-            {% empty %}
-                <p class="empty-message">
-                    Sklep nie ma obecnie żadnych przedmiotów.
-                </p>
-            {% endfor %}
-        </div>
-    </section>
-
-    <section class="panel">
-        <h2>Twój plecak</h2>
-
-        <ul class="inventory-list">
-            {% for inventory_item in inventory_items %}
-                <li class="inventory-item">
-                    <div>
-                        <strong>
-                            {{ inventory_item.item.name }}
-                        </strong>
-
-                        <p>
-                            Liczba: {{ inventory_item.quantity }}
-                        </p>
-
-                        <p>
-                            Cena sprzedaży:
-                            {{ inventory_item.item.sell_price }} złota/szt.
-                        </p>
-                    </div>
-
-                    <form
-                        method="post"
-                        action="{% url 'game:shop_sell' character.id inventory_item.item.id %}"
-                    >
-                        {% csrf_token %}
-
-                        <button
-                            class="button button-danger"
-                            type="submit"
-                        >
-                            Sprzedaj
-                        </button>
-                    </form>
-                </li>
-            {% empty %}
-                <li class="empty-message">
-                    Plecak jest pusty.
-                </li>
-            {% endfor %}
-        </ul>
-    </section>
-
-    <nav class="page-navigation">
+    <nav class="shop-navigation">
         <a
             class="button button-secondary"
             href="{% url 'game:equipment_detail' character.id %}"
@@ -192,11 +48,214 @@
 
         <a
             class="button button-secondary"
+            href="{% url 'game:battle_setup' character.id %}"
+        >
+            ⚔ Wybór przeciwnika
+        </a>
+
+        <a
+            class="button button-secondary"
             href="{% url 'game:character_list' %}"
         >
             ← Powrót do postaci
         </a>
     </nav>
+
+    {% if error_message %}
+        <p class="alert">
+            {{ error_message }}
+        </p>
+    {% endif %}
+
+    <div class="shop-layout">
+
+        <section class="panel shop-products-panel">
+            <h2>Przedmioty do kupienia</h2>
+
+            <p class="products-description">
+                Kliknij kategorię, aby rozwinąć lub ukryć jej przedmioty.
+            </p>
+
+            <div class="shop-categories">
+                {% for category_name, entries in shop_categories.items %}
+                    <details
+                        class="shop-category"
+                        {% if forloop.first %}open{% endif %}
+                    >
+                        <summary class="category-header">
+                            <span class="category-title">
+                                <span class="category-arrow">›</span>
+                                {{ category_name }}
+                            </span>
+
+                            <span class="category-count">
+                                {{ entries|length }}
+                            </span>
+                        </summary>
+
+                        <div class="category-content">
+                            <div class="shop-grid">
+                                {% for entry in entries %}
+                                    <article
+                                        class="
+                                            shop-item
+                                            {% if not entry.can_buy %}
+                                                unavailable-item
+                                            {% endif %}
+                                        "
+                                    >
+                                        <div>
+                                            <p class="item-type">
+                                                {{ entry.item.get_type_display }}
+                                            </p>
+
+                                            <h3>{{ entry.item.name }}</h3>
+
+                                            {% if entry.item.description %}
+                                                <p class="item-description">
+                                                    {{ entry.item.description }}
+                                                </p>
+                                            {% endif %}
+                                        </div>
+
+                                        <ul class="information-list">
+                                            <li class="information-row">
+                                                <span>Rzadkość</span>
+
+                                                <strong>
+                                                    {{ entry.item.get_rarity_display }}
+                                                </strong>
+                                            </li>
+
+                                            <li class="information-row">
+                                                <span>Wymagany poziom</span>
+
+                                                <strong>
+                                                    {{ entry.item.required_level }}
+                                                </strong>
+                                            </li>
+
+                                            {% if entry.item.power %}
+                                                <li class="information-row">
+                                                    <span>Moc</span>
+
+                                                    <strong>
+                                                        {{ entry.item.power }}
+                                                    </strong>
+                                                </li>
+                                            {% endif %}
+
+                                            {% if entry.item.heal_amount %}
+                                                <li class="information-row">
+                                                    <span>Leczenie</span>
+
+                                                    <strong>
+                                                        {{ entry.item.heal_amount }}
+                                                        HP
+                                                    </strong>
+                                                </li>
+                                            {% endif %}
+
+                                            <li class="information-row price-row">
+                                                <span>Cena</span>
+
+                                                <strong>
+                                                    {{ entry.item.buy_price }}
+                                                    złota
+                                                </strong>
+                                            </li>
+                                        </ul>
+
+                                        {% if entry.can_buy %}
+                                            <form
+                                                method="post"
+                                                action="{% url 'game:shop_buy' character.id entry.item.id %}"
+                                            >
+                                                {% csrf_token %}
+
+                                                <button
+                                                    class="button button-success shop-button"
+                                                    type="submit"
+                                                >
+                                                    Kup
+                                                </button>
+                                            </form>
+                                        {% elif not entry.meets_level %}
+                                            <p class="unavailable-reason">
+                                                Wymagany jest wyższy poziom.
+                                            </p>
+                                        {% elif not entry.can_afford %}
+                                            <p class="unavailable-reason">
+                                                Masz za mało złota.
+                                            </p>
+                                        {% endif %}
+                                    </article>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </details>
+                {% empty %}
+                    <p class="empty-message">
+                        Sklep nie ma obecnie żadnych przedmiotów.
+                    </p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <aside class="panel inventory-panel">
+            <h2>Twój plecak</h2>
+
+            <p class="inventory-summary">
+                Przedmioty należące do
+                <strong>{{ character.name }}</strong>
+            </p>
+
+            <ul class="inventory-list">
+                {% for inventory_item in inventory_items %}
+                    <li class="inventory-item">
+                        <div class="inventory-information">
+                            <p class="inventory-item-type">
+                                {{ inventory_item.item.get_type_display }}
+                            </p>
+
+                            <strong class="inventory-item-name">
+                                {{ inventory_item.item.name }}
+                            </strong>
+
+                            <span>
+                                Liczba: {{ inventory_item.quantity }}
+                            </span>
+
+                            <span>
+                                Sprzedaż:
+                                {{ inventory_item.item.sell_price }}
+                                złota/szt.
+                            </span>
+                        </div>
+
+                        <form
+                            method="post"
+                            action="{% url 'game:shop_sell' character.id inventory_item.item.id %}"
+                        >
+                            {% csrf_token %}
+
+                            <button
+                                class="button button-danger sell-button"
+                                type="submit"
+                            >
+                                Sprzedaj
+                            </button>
+                        </form>
+                    </li>
+                {% empty %}
+                    <li class="empty-message">
+                        Plecak jest pusty.
+                    </li>
+                {% endfor %}
+            </ul>
+        </aside>
+
+    </div>
 
 </main>
 </body>
