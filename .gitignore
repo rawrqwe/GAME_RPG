@@ -1,0 +1,9 @@
+# Pliki tymczasowe tworzone przez Pythona
+__pycache__/
+*.py[cod]
+
+# Lokalne środowisko wirtualne
+venv/
+
+# Ustawienia edytora PyCharm
+.idea/
