@@ -43,6 +43,20 @@
             </p>
         {% endif %}
 
+        {% if turn_result.experience_reward or turn_result.gold_reward %}
+            <p>
+                Zdobywasz
+                <strong>{{ turn_result.experience_reward }} XP</strong>
+                oraz
+                <strong>{{ turn_result.gold_reward }} szt. złota</strong>.
+            </p>
+        {% endif %}
+
+        {% if turn_result.leveled_up %}
+            <p>
+                <strong>Awansujesz na wyższy poziom!</strong>
+            </p>
+        {% endif %}
     </section>
 {% endif %}
 
@@ -55,15 +69,25 @@
     <p><strong>Walka zakończona!</strong></p>
 {% endif %}
 
-<a href="{% url 'game:character_list' %}">Powrót do listy</a>
+<a href="{% url 'game:character_list' %}">
+    Powrót do listy
+</a>
 
 {% if battle.status == "ONGOING" %}
     <h2>Mikstury</h2>
+
     <ul>
         {% for potion in potions %}
             <li>
-                {{ potion.item.name }} x{{ potion.quantity }} (leczy {{ potion.item.heal_amount }} HP)
-                <form method="post" action="{% url 'game:battle_use_potion' battle.id potion.id %}" style="display: inline;">
+                {{ potion.item.name }}
+                x{{ potion.quantity }}
+                (leczy {{ potion.item.heal_amount }} HP)
+
+                <form
+                    method="post"
+                    action="{% url 'game:battle_use_potion' battle.id potion.id %}"
+                    style="display: inline;"
+                >
                     {% csrf_token %}
                     <button type="submit">Użyj</button>
                 </form>
