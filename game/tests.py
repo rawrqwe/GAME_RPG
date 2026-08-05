@@ -441,4 +441,186 @@ class ProcessTurnTests(TestCase):
             self.character
         )
 
-        self.assertEqual(damage, 10)
+        self.assertEqual(damage, 12)
+
+    def test_character_class_can_only_equip_allowed_weapon_type(self):
+        bow = Item.objects.create(
+            name="Łuk klasowy",
+            type=Item.Type.BOW,
+            power=5,
+        )
+
+        sword = Item.objects.create(
+            name="Niedozwolony miecz",
+            type=Item.Type.SWORD,
+            power=5,
+        )
+
+        self.character.character_class.starting_weapon = bow
+        self.character.character_class.save()
+
+        InventoryItem.objects.create(
+            character=self.character,
+            item=bow,
+            quantity=1,
+        )
+
+        self.character.equipment.equip_item(bow)
+        self.character.equipment.refresh_from_db()
+
+        self.assertEqual(
+            self.character.equipment.weapon,
+            bow
+        )
+
+        InventoryItem.objects.create(
+            character=self.character,
+            item=sword,
+            quantity=1,
+        )
+
+        with self.assertRaises(ValueError):
+            self.character.equipment.equip_item(sword)
+
+        self.character.equipment.refresh_from_db()
+
+        self.assertEqual(
+            self.character.equipment.weapon,
+            bow
+        )
+    def test_character_cannot_equip_item_above_its_level(self):
+        sword = Item.objects.create(
+            name="Miecz wysokiego poziomu",
+            type=Item.Type.SWORD,
+            power=20,
+            required_level=5,
+        )
+
+        self.character.character_class.starting_weapon = sword
+        self.character.character_class.save()
+
+        InventoryItem.objects.create(
+            character=self.character,
+            item=sword,
+            quantity=1,
+        )
+
+        with self.assertRaises(ValueError):
+            self.character.equipment.equip_item(sword)
+
+        self.character.equipment.refresh_from_db()
+
+        self.assertIsNone(
+            self.character.equipment.weapon
+        )
+
+    @patch("game.combat.random.randint", return_value=0)
+    def test_equipment_bonus_increases_weapon_damage(self,mocked_randint):
+        self.character.agility = 18
+        self.character.save()
+
+        bow = Item.objects.create(
+            name="Łuk z bonusem",
+            type=Item.Type.BOW,
+            power=6,
+            bonus_stat=Item.BonusStats.AGILITY,
+            bonus_value=4,
+        )
+
+        gloves = Item.objects.create(
+            name="Rękawice łucznika",
+            type=Item.Type.GLOVES,
+            power=0,
+            bonus_stat=Item.BonusStats.AGILITY,
+            bonus_value=2,
+        )
+
+        self.character.equipment.weapon = bow
+        self.character.equipment.gloves = gloves
+        self.character.equipment.save()
+
+        enemy = Enemy.objects.create(
+            name="Cel treningowy",
+            defense=4,
+        )
+
+        damage = calculate_player_damage(
+            self.character,
+            enemy
+        )
+
+        self.assertEqual(damage, 26)
+
+    def test_new_character_uses_class_and_race_statistics(self):
+        race = Race.objects.create(
+            name="Rasa testowa",
+            hp_bonus=10,
+            mana_bonus=5,
+            strength_bonus=3,
+            agility_bonus=2,
+            intelligence_bonus=4,
+        )
+
+        character_class = CharacterClass.objects.create(
+            name="Klasa testowa",
+            base_hp=120,
+            base_mana=40,
+            base_strength=14,
+            base_agility=8,
+            base_intelligence=6,
+            hp_growth=10,
+            mana_growth=5,
+            strength_growth=2,
+            agility_growth=1,
+            intelligence_growth=1,
+        )
+
+        character = Character.objects.create(
+            owner=self.character.owner,
+            name="Nowa postać",
+            race=race,
+            character_class=character_class,
+        )
+
+        self.assertEqual(character.max_hp, 130)
+        self.assertEqual(character.current_hp, 130)
+
+        self.assertEqual(character.max_mana, 45)
+        self.assertEqual(character.current_mana, 45)
+
+        self.assertEqual(character.strength, 17)
+        self.assertEqual(character.agility, 10)
+        self.assertEqual(character.intelligence, 10)
+
+    def test_only_sword_class_can_equip_shield(self):
+        bow = Item.objects.create(
+            name="Łuk startowy",
+            type=Item.Type.BOW,
+            power=4,
+        )
+
+        shield = Item.objects.create(
+            name="Tarcza testowa",
+            type=Item.Type.SHIELD,
+            power=5,
+        )
+
+        self.character.character_class.starting_weapon = bow
+        self.character.character_class.save()
+
+        InventoryItem.objects.create(
+            character=self.character,
+            item=shield,
+            quantity=1,
+        )
+
+        with self.assertRaises(ValueError):
+            self.character.equipment.equip_item(
+                shield
+            )
+
+        self.character.equipment.refresh_from_db()
+
+        self.assertIsNone(
+            self.character.equipment.shield
+        )

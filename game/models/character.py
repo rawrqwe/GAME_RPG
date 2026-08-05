@@ -84,21 +84,60 @@ class Character(models.Model):
 
     def save(self, *args, **kwargs):
         from .equipment import Equipment
-        from .inventory import InventoryItem  # import lokalny - unikamy cyklicznego importu
+        from .inventory import InventoryItem
 
         is_new = self.pk is None
+
+        if is_new:
+            character_class = self.character_class
+            race = self.race
+
+            self.max_hp = (
+                    character_class.base_hp
+                    + race.hp_bonus
+            )
+            self.current_hp = self.max_hp
+
+            self.max_mana = (
+                    character_class.base_mana
+                    + race.mana_bonus
+            )
+            self.current_mana = self.max_mana
+
+            self.strength = (
+                    character_class.base_strength
+                    + race.strength_bonus
+            )
+
+            self.agility = (
+                    character_class.base_agility
+                    + race.agility_bonus
+            )
+
+            self.intelligence = (
+                    character_class.base_intelligence
+                    + race.intelligence_bonus
+            )
+
         super().save(*args, **kwargs)
 
         if is_new:
-            equipment = Equipment.objects.create(character=self)
-            if self.character_class.starting_weapon:
-                weapon = self.character_class.starting_weapon
+            equipment = Equipment.objects.create(
+                character=self
+            )
+
+            starting_weapon = (
+                self.character_class.starting_weapon
+            )
+
+            if starting_weapon:
                 InventoryItem.objects.create(
                     character=self,
-                    item=weapon,
+                    item=starting_weapon,
                     quantity=1
                 )
-                equipment.weapon = self.character_class.starting_weapon
+
+                equipment.weapon = starting_weapon
                 equipment.save()
 
     def get_xp_to_next_level(self):

@@ -1,0 +1,155 @@
+[
+  {
+    "model": "game.item",
+    "pk": 20,
+    "fields": {
+      "name": "Ciężki miecz",
+      "description": "Solidna broń dla rozwijającego się Wojownika.",
+      "type": "SWORD",
+      "rarity": "UNCOMMON",
+      "required_level": 3,
+      "buy_price": 60,
+      "sell_price": 24,
+      "power": 8,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 0
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 21,
+    "fields": {
+      "name": "Runiczne ostrze",
+      "description": "Miecz pokryty runami wzmacniającymi każde uderzenie.",
+      "type": "SWORD",
+      "rarity": "RARE",
+      "required_level": 7,
+      "buy_price": 220,
+      "sell_price": 88,
+      "power": 15,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 0
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 22,
+    "fields": {
+      "name": "Wzmocniony łuk",
+      "description": "Mocniejszy łuk wykonany z elastycznego drewna.",
+      "type": "BOW",
+      "rarity": "UNCOMMON",
+      "required_level": 3,
+      "buy_price": 65,
+      "sell_price": 26,
+      "power": 9,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 0
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 23,
+    "fields": {
+      "name": "Łuk łowcy",
+      "description": "Precyzyjna broń używana przez doświadczonych łowców.",
+      "type": "BOW",
+      "rarity": "RARE",
+      "required_level": 5,
+      "buy_price": 120,
+      "sell_price": 48,
+      "power": 12,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 0
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 24,
+    "fields": {
+      "name": "Łuk burzy",
+      "description": "Legendarny łuk, którego cięciwa drży od energii burzy.",
+      "type": "BOW",
+      "rarity": "LEGENDARY",
+      "required_level": 10,
+      "buy_price": 380,
+      "sell_price": 152,
+      "power": 21,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 0
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 25,
+    "fields": {
+      "name": "Dębowa laska",
+      "description": "Laska skupiająca podstawową energię magiczną.",
+      "type": "STAFF",
+      "rarity": "UNCOMMON",
+      "required_level": 3,
+      "buy_price": 60,
+      "sell_price": 24,
+      "power": 7,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 0
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 26,
+    "fields": {
+      "name": "Kryształowa laska",
+      "description": "Magiczny kryształ wzmacnia zaklęcia właściciela.",
+      "type": "STAFF",
+      "rarity": "RARE",
+      "required_level": 5,
+      "buy_price": 120,
+      "sell_price": 48,
+      "power": 11,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 0
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 27,
+    "fields": {
+      "name": "Laska płomieni",
+      "description": "Broń maga nasycona energią żywego ognia.",
+      "type": "STAFF",
+      "rarity": "EPIC",
+      "required_level": 8,
+      "buy_price": 250,
+      "sell_price": 100,
+      "power": 16,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 0
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 28,
+    "fields": {
+      "name": "Laska pustki",
+      "description": "Niebezpieczna laska czerpiąca moc z innego wymiaru.",
+      "type": "STAFF",
+      "rarity": "LEGENDARY",
+      "required_level": 11,
+      "buy_price": 400,
+      "sell_price": 160,
+      "power": 21,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 0
+    }
+  }
+]

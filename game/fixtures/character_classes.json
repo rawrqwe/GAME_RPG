@@ -1,0 +1,59 @@
+[
+  {
+    "model": "game.characterclass",
+    "pk": 1,
+    "fields": {
+      "name": "Wojownik",
+      "description": "Wytrzymały bohater walczący mieczami i polegający na sile.",
+      "base_hp": 150,
+      "base_mana": 0,
+      "base_strength": 15,
+      "base_agility": 8,
+      "base_intelligence": 5,
+      "hp_growth": 12.0,
+      "mana_growth": 0.0,
+      "strength_growth": 2.5,
+      "agility_growth": 1.0,
+      "intelligence_growth": 0.5,
+      "starting_weapon": 1
+    }
+  },
+  {
+    "model": "game.characterclass",
+    "pk": 2,
+    "fields": {
+      "name": "Mag",
+      "description": "Potężny użytkownik magii korzystający z inteligencji i lasek.",
+      "base_hp": 70,
+      "base_mana": 120,
+      "base_strength": 4,
+      "base_agility": 8,
+      "base_intelligence": 18,
+      "hp_growth": 5.0,
+      "mana_growth": 15.0,
+      "strength_growth": 0.5,
+      "agility_growth": 1.0,
+      "intelligence_growth": 3.0,
+      "starting_weapon": 6
+    }
+  },
+  {
+    "model": "game.characterclass",
+    "pk": 4,
+    "fields": {
+      "name": "Łucznik",
+      "description": "Zwinny wojownik korzystający z łuków i wysokiej zręczności.",
+      "base_hp": 100,
+      "base_mana": 30,
+      "base_strength": 12,
+      "base_agility": 16,
+      "base_intelligence": 6,
+      "hp_growth": 8.0,
+      "mana_growth": 4.0,
+      "strength_growth": 2.0,
+      "agility_growth": 2.5,
+      "intelligence_growth": 0.8,
+      "starting_weapon": 4
+    }
+  }
+]

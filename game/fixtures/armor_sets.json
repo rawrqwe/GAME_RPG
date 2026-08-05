@@ -1,0 +1,240 @@
+[
+  {
+    "model": "game.item",
+    "pk": 29,
+    "fields": {
+      "name": "Drewniana tarcza",
+      "description": "Prosta tarcza zapewniająca podstawową ochronę Wojownikowi.",
+      "type": "SHIELD",
+      "rarity": "COMMON",
+      "required_level": 1,
+      "buy_price": 18,
+      "sell_price": 7,
+      "power": 2,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 0
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 30,
+    "fields": {
+      "name": "Pikowany kaftan",
+      "description": "Lekki pancerz odpowiedni dla początkującego bohatera.",
+      "type": "ARMOR",
+      "rarity": "COMMON",
+      "required_level": 1,
+      "buy_price": 22,
+      "sell_price": 9,
+      "power": 3,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 0
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 31,
+    "fields": {
+      "name": "Płócienne rękawice",
+      "description": "Proste rękawice chroniące dłonie podczas walki.",
+      "type": "GLOVES",
+      "rarity": "COMMON",
+      "required_level": 1,
+      "buy_price": 12,
+      "sell_price": 5,
+      "power": 1,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 0
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 32,
+    "fields": {
+      "name": "Kolczy hełm",
+      "description": "Hełm wykonany z połączonych stalowych ogniw.",
+      "type": "HELMET",
+      "rarity": "UNCOMMON",
+      "required_level": 4,
+      "buy_price": 80,
+      "sell_price": 32,
+      "power": 5,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 0
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 33,
+    "fields": {
+      "name": "Kolcze nogawice",
+      "description": "Cięższe spodnie zapewniające lepszą ochronę nóg.",
+      "type": "LEGGINGS",
+      "rarity": "UNCOMMON",
+      "required_level": 4,
+      "buy_price": 90,
+      "sell_price": 36,
+      "power": 6,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 0
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 34,
+    "fields": {
+      "name": "Wzmocnione buty",
+      "description": "Buty z metalowymi okuciami chroniącymi stopy.",
+      "type": "BOOTS",
+      "rarity": "UNCOMMON",
+      "required_level": 4,
+      "buy_price": 65,
+      "sell_price": 26,
+      "power": 4,
+      "bonus_stat": "AGILITY",
+      "bonus_value": 1,
+      "heal_amount": 0
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 35,
+    "fields": {
+      "name": "Wieżowa tarcza",
+      "description": "Ogromna tarcza przeznaczona dla doświadczonego Wojownika.",
+      "type": "SHIELD",
+      "rarity": "EPIC",
+      "required_level": 8,
+      "buy_price": 240,
+      "sell_price": 96,
+      "power": 12,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 0
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 36,
+    "fields": {
+      "name": "Smoczy hełm",
+      "description": "Hełm wykonany z odpornych łusek młodego smoka.",
+      "type": "HELMET",
+      "rarity": "EPIC",
+      "required_level": 8,
+      "buy_price": 200,
+      "sell_price": 80,
+      "power": 9,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 0
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 37,
+    "fields": {
+      "name": "Smocze nogawice",
+      "description": "Ciężkie nogawice chronione zachodzącymi na siebie łuskami.",
+      "type": "LEGGINGS",
+      "rarity": "EPIC",
+      "required_level": 8,
+      "buy_price": 230,
+      "sell_price": 92,
+      "power": 11,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 0
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 38,
+    "fields": {
+      "name": "Smocze buty",
+      "description": "Wytrzymałe buty zwiększające również mobilność bohatera.",
+      "type": "BOOTS",
+      "rarity": "EPIC",
+      "required_level": 8,
+      "buy_price": 180,
+      "sell_price": 72,
+      "power": 7,
+      "bonus_stat": "AGILITY",
+      "bonus_value": 2,
+      "heal_amount": 0
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 39,
+    "fields": {
+      "name": "Rękawice olbrzyma",
+      "description": "Ciężkie rękawice zwiększające siłę Wojownika.",
+      "type": "GLOVES",
+      "rarity": "RARE",
+      "required_level": 6,
+      "buy_price": 140,
+      "sell_price": 56,
+      "power": 5,
+      "bonus_stat": "STRENGTH",
+      "bonus_value": 3,
+      "heal_amount": 0
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 40,
+    "fields": {
+      "name": "Rękawice wiatru",
+      "description": "Lekkie rękawice zwiększające zręczność Łucznika.",
+      "type": "GLOVES",
+      "rarity": "RARE",
+      "required_level": 6,
+      "buy_price": 140,
+      "sell_price": 56,
+      "power": 4,
+      "bonus_stat": "AGILITY",
+      "bonus_value": 3,
+      "heal_amount": 0
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 41,
+    "fields": {
+      "name": "Rękawice runiczne",
+      "description": "Magiczne rękawice zwiększające inteligencję Maga.",
+      "type": "GLOVES",
+      "rarity": "RARE",
+      "required_level": 6,
+      "buy_price": 140,
+      "sell_price": 56,
+      "power": 3,
+      "bonus_stat": "INTELLIGENCE",
+      "bonus_value": 3,
+      "heal_amount": 0
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 42,
+    "fields": {
+      "name": "Średnia mikstura zdrowia",
+      "description": "Przywraca 40 punktów zdrowia.",
+      "type": "POTION",
+      "rarity": "UNCOMMON",
+      "required_level": 3,
+      "buy_price": 25,
+      "sell_price": 10,
+      "power": 0,
+      "bonus_stat": "NONE",
+      "bonus_value": 0,
+      "heal_amount": 40
+    }
+  }
+]

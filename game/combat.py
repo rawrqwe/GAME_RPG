@@ -3,56 +3,101 @@ import random
 from .models import Battle, Item
 
 
-# Wybór głównej statystyki ataku na podstawie używanej broni.
 def get_player_attack_stat(character, weapon):
+    equipment = character.equipment
+
+    strength = (
+        character.strength
+        + equipment.get_stat_bonus(
+            Item.BonusStats.STRENGTH
+        )
+    )
+
+    agility = (
+        character.agility
+        + equipment.get_stat_bonus(
+            Item.BonusStats.AGILITY
+        )
+    )
+
+    intelligence = (
+        character.intelligence
+        + equipment.get_stat_bonus(
+            Item.BonusStats.INTELLIGENCE
+        )
+    )
+
     if weapon is None:
-        return character.strength
+        return strength
 
     attack_stats = {
-        Item.Type.SWORD: character.strength,
-        Item.Type.BOW: character.agility,
-        Item.Type.STAFF: character.intelligence,
+        Item.Type.SWORD: strength,
+        Item.Type.BOW: agility,
+        Item.Type.STAFF: intelligence,
     }
 
     return attack_stats.get(
         weapon.type,
-        character.strength
+        strength
     )
 
 
-# Obrażenia zadawane przez postać.
 def calculate_player_damage(character, enemy):
     weapon = character.equipment.weapon
 
     weapon_power = weapon.power if weapon else 0
-    attack_stat = get_player_attack_stat(character, weapon)
+    attack_stat = get_player_attack_stat(
+        character,
+        weapon
+    )
 
     attack_power = attack_stat + weapon_power
     variation = random.randint(-2, 2)
 
-    damage = attack_power + variation - enemy.defense
+    damage = (
+        attack_power
+        + variation
+        - enemy.defense
+    )
 
     return max(damage, 1)
 
 
-# Obrażenia zadawane postaci przez przeciwnika.
 def calculate_enemy_damage(enemy, character):
-    armor_power = character.equipment.get_total_armor_power()
-    attack_power = enemy.attack
+    equipment = character.equipment
+
+    armor_power = (
+        equipment.get_total_armor_power()
+    )
+
+    agility_bonus = equipment.get_stat_bonus(
+        Item.BonusStats.AGILITY
+    )
+
+    effective_agility = (
+        character.agility
+        + agility_bonus
+    )
+
+    agility_defense = effective_agility // 4
+    armor_defense = armor_power // 5
+
+    defense = (
+        agility_defense
+        + armor_defense
+    )
+
     variation = random.randint(-2, 2)
 
-    agility_defense = character.agility // 4
-    armor_defense = armor_power // 3
-
-    defense = agility_defense + armor_defense
-
-    damage = attack_power + variation - defense
+    damage = (
+        enemy.attack
+        + variation
+        - defense
+    )
 
     return max(damage, 1)
 
 
-# Postać atakuje przeciwnika.
-# Funkcja zwraca zadane obrażenia oraz informację o awansie.
 def player_attack(battle):
     damage = calculate_player_damage(
         battle.character,
@@ -66,6 +111,7 @@ def player_attack(battle):
     if battle.enemy_current_hp <= 0:
         battle.enemy_current_hp = 0
         battle.status = Battle.Status.WON
+
         leveled_up = award_rewards(battle)
 
     battle.save()
@@ -73,8 +119,6 @@ def player_attack(battle):
     return damage, leveled_up
 
 
-# Przeciwnik atakuje postać.
-# Funkcja zwraca zadane obrażenia.
 def enemy_attack(battle):
     damage = calculate_enemy_damage(
         battle.enemy,
@@ -92,7 +136,6 @@ def enemy_attack(battle):
     return damage
 
 
-# Przetworzenie pełnej tury walki.
 def process_turn(battle):
     result = {
         "player_damage": 0,
@@ -120,7 +163,9 @@ def process_turn(battle):
         )
 
     if battle.status == Battle.Status.ONGOING:
-        result["enemy_damage"] = enemy_attack(battle)
+        result["enemy_damage"] = enemy_attack(
+            battle
+        )
 
         battle.turn_number += 1
         battle.save()
@@ -128,7 +173,6 @@ def process_turn(battle):
     return result
 
 
-# Użycie mikstury podczas walki.
 def use_potion(battle, inventory_item):
     if battle.status != Battle.Status.ONGOING:
         return {
@@ -139,9 +183,14 @@ def use_potion(battle, inventory_item):
     item = inventory_item.item
     character = battle.character
 
-    hp_before_healing = battle.character_current_hp
+    hp_before_healing = (
+        battle.character_current_hp
+    )
 
-    new_hp = hp_before_healing + item.heal_amount
+    new_hp = (
+        hp_before_healing
+        + item.heal_amount
+    )
 
     battle.character_current_hp = min(
         new_hp,
@@ -168,7 +217,9 @@ def use_potion(battle, inventory_item):
     }
 
     if battle.status == Battle.Status.ONGOING:
-        result["enemy_damage"] = enemy_attack(battle)
+        result["enemy_damage"] = enemy_attack(
+            battle
+        )
 
         battle.turn_number += 1
         battle.save()
@@ -176,15 +227,15 @@ def use_potion(battle, inventory_item):
     return result
 
 
-# Przyznanie nagród po zwycięskiej walce.
 def award_rewards(battle):
     character = battle.character
     enemy = battle.enemy
 
-    character.experience += enemy.experience_reward
+    character.experience += (
+        enemy.experience_reward
+    )
+
     character.gold += enemy.gold_reward
     character.save()
 
-    leveled_up = character.try_level_up()
-
-    return leveled_up
+    return character.try_level_up()
