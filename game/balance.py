@@ -34,7 +34,7 @@ def simulate_battle(
     enemy,
     max_turns=MAX_SIMULATION_TURNS,
 ):
-    character_hp = character.max_hp
+    character_hp = character.total_max_hp
     enemy_hp = enemy.max_hp
     turns = 0
 
@@ -116,7 +116,7 @@ def simulate_battles(
     if character.max_hp > 0:
         remaining_hp_percentage = (
             average_remaining_hp
-            / character.max_hp
+            / character.total_max_hp
         ) * 100
     else:
         remaining_hp_percentage = 0

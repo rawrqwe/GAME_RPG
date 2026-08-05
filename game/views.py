@@ -335,11 +335,16 @@ def battle_setup(request, character_id):
 def rest_character(request, character_id):
     character = get_object_or_404(
         Character,
-        id=character_id
+        id=character_id,
     )
 
-    character.current_hp = character.max_hp
-    character.current_mana = character.max_mana
+    character.current_hp = (
+        character.total_max_hp
+    )
+
+    character.current_mana = (
+        character.total_max_mana
+    )
 
     character.save(
         update_fields=[
@@ -350,10 +355,10 @@ def rest_character(request, character_id):
 
     messages.success(
         request,
-        "Postać odpoczęła i odzyskała siły."
+        "Postać odpoczęła i odzyskała siły.",
     )
 
     return redirect(
         "game:battle_setup",
-        character_id=character.id
+        character_id=character.id,
     )

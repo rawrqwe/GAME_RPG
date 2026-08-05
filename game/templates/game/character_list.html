@@ -4,7 +4,11 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Twoje postacie</title>
 
@@ -23,7 +27,9 @@
 <main class="page-container">
 
     <header class="page-header">
-        <p class="page-label">Panel bohaterów</p>
+        <p class="page-label">
+            Panel bohaterów
+        </p>
 
         <h1>Twoje postacie</h1>
 
@@ -39,23 +45,32 @@
         <div class="card-grid">
             {% for character in characters %}
                 <article class="card character-card">
-                    <p class="card-label">Bohater</p>
+                    <p class="card-label">
+                        Bohater
+                    </p>
 
                     <h3>{{ character.name }}</h3>
 
                     <ul class="information-list">
                         <li class="information-row">
                             <span>Poziom</span>
-                            <strong>{{ character.level }}</strong>
+
+                            <strong>
+                                {{ character.level }}
+                            </strong>
                         </li>
 
                         <li class="information-row">
                             <span>Rasa</span>
-                            <strong>{{ character.race.name }}</strong>
+
+                            <strong>
+                                {{ character.race.name }}
+                            </strong>
                         </li>
 
                         <li class="information-row">
                             <span>Klasa</span>
+
                             <strong>
                                 {{ character.character_class.name }}
                             </strong>
@@ -63,22 +78,35 @@
 
                         <li class="information-row">
                             <span>HP</span>
+
                             <strong>
                                 {{ character.current_hp }}
-                                / {{ character.max_hp }}
+                                / {{ character.total_max_hp }}
+                            </strong>
+                        </li>
+
+                        <li class="information-row">
+                            <span>Mana</span>
+
+                            <strong>
+                                {{ character.current_mana }}
+                                / {{ character.total_max_mana }}
                             </strong>
                         </li>
 
                         <li class="information-row">
                             <span>Doświadczenie</span>
+
                             <strong>
                                 {{ character.experience }}
-                                / {{ character.get_xp_to_next_level }}
+                                /
+                                {{ character.get_xp_to_next_level }}
                             </strong>
                         </li>
 
                         <li class="information-row">
                             <span>Złoto</span>
+
                             <strong class="gold-value">
                                 {{ character.gold }}
                             </strong>

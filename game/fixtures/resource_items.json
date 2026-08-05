@@ -1,0 +1,104 @@
+[
+  {
+    "model": "game.item",
+    "pk": 43,
+    "fields": {
+      "name": "Pancerz witalności",
+      "description": "Solidny pancerz zwiększający maksymalne HP bohatera o 20 punktów.",
+      "type": "ARMOR",
+      "rarity": "UNCOMMON",
+      "required_level": 2,
+      "buy_price": 55,
+      "sell_price": 22,
+      "power": 5,
+      "bonus_stat": "HP",
+      "bonus_value": 20,
+      "heal_amount": 0
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 44,
+    "fields": {
+      "name": "Hełm strażnika",
+      "description": "Ciężki hełm zwiększający maksymalne HP bohatera o 25 punktów.",
+      "type": "HELMET",
+      "rarity": "RARE",
+      "required_level": 4,
+      "buy_price": 95,
+      "sell_price": 38,
+      "power": 7,
+      "bonus_stat": "HP",
+      "bonus_value": 25,
+      "heal_amount": 0
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 45,
+    "fields": {
+      "name": "Nogawice tytana",
+      "description": "Potężne nogawice zwiększające maksymalne HP bohatera o 40 punktów.",
+      "type": "LEGGINGS",
+      "rarity": "EPIC",
+      "required_level": 7,
+      "buy_price": 210,
+      "sell_price": 84,
+      "power": 11,
+      "bonus_stat": "HP",
+      "bonus_value": 40,
+      "heal_amount": 0
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 46,
+    "fields": {
+      "name": "Laska skupienia",
+      "description": "Laska zwiększająca maksymalną manę Maga o 20 punktów.",
+      "type": "STAFF",
+      "rarity": "UNCOMMON",
+      "required_level": 3,
+      "buy_price": 60,
+      "sell_price": 24,
+      "power": 7,
+      "bonus_stat": "MANA",
+      "bonus_value": 20,
+      "heal_amount": 0
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 47,
+    "fields": {
+      "name": "Laska głębin",
+      "description": "Magiczna broń zwiększająca maksymalną manę Maga o 35 punktów.",
+      "type": "STAFF",
+      "rarity": "RARE",
+      "required_level": 6,
+      "buy_price": 160,
+      "sell_price": 64,
+      "power": 13,
+      "bonus_stat": "MANA",
+      "bonus_value": 35,
+      "heal_amount": 0
+    }
+  },
+  {
+    "model": "game.item",
+    "pk": 48,
+    "fields": {
+      "name": "Laska astralna",
+      "description": "Potężna laska zwiększająca maksymalną manę Maga o 55 punktów.",
+      "type": "STAFF",
+      "rarity": "LEGENDARY",
+      "required_level": 9,
+      "buy_price": 330,
+      "sell_price": 132,
+      "power": 19,
+      "bonus_stat": "MANA",
+      "bonus_value": 55,
+      "heal_amount": 0
+    }
+  }
+]

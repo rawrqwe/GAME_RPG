@@ -4,10 +4,16 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>
-        {{ battle.character.name }} vs {{ battle.enemy.name }}
+        {{ battle.character.name }}
+        vs
+        {{ battle.enemy.name }}
     </title>
 
     <link
@@ -32,13 +38,17 @@
 
         <p class="battle-status">
             Status:
-            <strong>{{ battle.get_status_display }}</strong>
+            <strong>
+                {{ battle.get_status_display }}
+            </strong>
         </p>
     </header>
 
     <section class="fighters">
         <article class="fighter-card player-card">
-            <p class="fighter-label">Bohater</p>
+            <p class="fighter-label">
+                Bohater
+            </p>
 
             <h2>{{ battle.character.name }}</h2>
 
@@ -47,25 +57,29 @@
 
                 <strong>
                     {{ battle.character_current_hp }}
-                    / {{ battle.character.max_hp }}
+                    / {{ battle.character.total_max_hp }}
                 </strong>
             </div>
 
             <progress
                 class="hp-bar player-hp"
                 value="{{ battle.character_current_hp }}"
-                max="{{ battle.character.max_hp }}"
+                max="{{ battle.character.total_max_hp }}"
                 aria-label="Punkty życia bohatera"
             >
                 {{ battle.character_current_hp }}
-                / {{ battle.character.max_hp }}
+                / {{ battle.character.total_max_hp }}
             </progress>
         </article>
 
-        <div class="versus">VS</div>
+        <div class="versus">
+            VS
+        </div>
 
         <article class="fighter-card enemy-card">
-            <p class="fighter-label">Przeciwnik</p>
+            <p class="fighter-label">
+                Przeciwnik
+            </p>
 
             <h2>{{ battle.enemy.name }}</h2>
 
@@ -99,10 +113,12 @@
                     <p class="turn-event player-event">
                         <span>⚔</span>
 
-                        {{ battle.character.name }} zadaje
+                        {{ battle.character.name }}
+                        zadaje
 
                         <strong>
-                            {{ turn_result.player_damage }} obrażeń
+                            {{ turn_result.player_damage }}
+                            obrażeń
                         </strong>.
                     </p>
                 {% endif %}
@@ -111,7 +127,8 @@
                     <p class="turn-event healing-event">
                         <span>✚</span>
 
-                        {{ battle.character.name }} odzyskuje
+                        {{ battle.character.name }}
+                        odzyskuje
 
                         <strong>
                             {{ turn_result.healed }} HP
@@ -123,10 +140,12 @@
                     <p class="turn-event enemy-event">
                         <span>☠</span>
 
-                        {{ battle.enemy.name }} zadaje
+                        {{ battle.enemy.name }}
+                        zadaje
 
                         <strong>
-                            {{ turn_result.enemy_damage }} obrażeń
+                            {{ turn_result.enemy_damage }}
+                            obrażeń
                         </strong>.
                     </p>
                 {% endif %}
@@ -138,13 +157,15 @@
                         Zdobywasz
 
                         <strong>
-                            {{ turn_result.experience_reward }} XP
+                            {{ turn_result.experience_reward }}
+                            XP
                         </strong>
 
                         oraz
 
                         <strong>
-                            {{ turn_result.gold_reward }} szt. złota
+                            {{ turn_result.gold_reward }}
+                            szt. złota
                         </strong>.
                     </p>
                 {% endif %}
@@ -172,7 +193,10 @@
             >
                 {% csrf_token %}
 
-                <button class="attack-button" type="submit">
+                <button
+                    class="attack-button"
+                    type="submit"
+                >
                     ⚔ Atakuj
                 </button>
             </form>
@@ -185,14 +209,19 @@
                 {% for potion in potions %}
                     <li class="potion-item">
                         <div class="potion-information">
-                            <strong>{{ potion.item.name }}</strong>
+                            <strong>
+                                {{ potion.item.name }}
+                            </strong>
 
                             <span>
-                                Liczba: {{ potion.quantity }}
+                                Liczba:
+                                {{ potion.quantity }}
                             </span>
 
                             <span>
-                                Leczenie: {{ potion.item.heal_amount }} HP
+                                Leczenie:
+                                {{ potion.item.heal_amount }}
+                                HP
                             </span>
                         </div>
 
@@ -202,7 +231,10 @@
                         >
                             {% csrf_token %}
 
-                            <button class="potion-button" type="submit">
+                            <button
+                                class="potion-button"
+                                type="submit"
+                            >
                                 ✚ Użyj
                             </button>
                         </form>
@@ -217,15 +249,27 @@
     {% else %}
         {% if battle.status == "WON" %}
             <section class="battle-end victory">
-                <p class="battle-end-icon">★</p>
+                <p class="battle-end-icon">
+                    ★
+                </p>
+
                 <h2>Zwycięstwo!</h2>
-                <p>Przeciwnik został pokonany.</p>
+
+                <p>
+                    Przeciwnik został pokonany.
+                </p>
             </section>
         {% elif battle.status == "LOSE" %}
             <section class="battle-end defeat">
-                <p class="battle-end-icon">☠</p>
+                <p class="battle-end-icon">
+                    ☠
+                </p>
+
                 <h2>Porażka</h2>
-                <p>Twoja postać została pokonana.</p>
+
+                <p>
+                    Twoja postać została pokonana.
+                </p>
             </section>
         {% endif %}
     {% endif %}

@@ -77,7 +77,7 @@
 
                 <strong>
                     {{ character.current_hp }}
-                    / {{ character.max_hp }}
+                    / {{ character.total_max_hp }}
                 </strong>
             </li>
 
@@ -86,7 +86,7 @@
 
                 <strong>
                     {{ character.current_mana }}
-                    / {{ character.max_mana }}
+                    / {{ character.total_max_mana }}
                 </strong>
             </li>
 
@@ -106,7 +106,7 @@
             </li>
         </ul>
 
-        {% if character.current_hp < character.max_hp or character.current_mana < character.max_mana %}
+        {% if character.current_hp < character.total_max_hp or character.current_mana < character.total_max_mana %}
             <form
                 class="rest-form"
                 method="post"

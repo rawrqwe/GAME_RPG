@@ -1,6 +1,6 @@
 import random
 
-from .models import Battle, Item
+from .models import Battle, Item, Character
 
 
 def get_player_attack_stat(character, weapon):
@@ -210,7 +210,7 @@ def use_potion(battle, inventory_item):
 
     battle.character_current_hp = min(
         new_hp,
-        character.max_hp
+        character.total_max_hp
     )
 
     actual_healing = (
