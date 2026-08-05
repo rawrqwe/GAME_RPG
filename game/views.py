@@ -6,7 +6,6 @@ from .models import Enemy, Battle
 from .shop import buy_item, ShopError, sell_item
 
 
-# Postać
 def character_list(request):
     characters = Character.objects.all()
     enemies = Enemy.objects.all()
@@ -16,7 +15,6 @@ def character_list(request):
     })
 
 
-# Walka
 def start_battle(request, character_id, enemy_id):
     character = get_object_or_404(Character, id=character_id)
     enemy = get_object_or_404(Enemy, id=enemy_id)
@@ -55,7 +53,6 @@ def battle_attack(request, battle_id):
     return redirect("game:battle_detail", battle_id=battle.id)
 
 
-# Sklep
 def shop_detail(request, character_id):
     character = get_object_or_404(
         Character,
@@ -152,7 +149,6 @@ def shop_sell(request, character_id, item_id):
     return redirect("game:shop_detail", character_id=character_id)
 
 
-# EQ
 def equip_item(request, character_id, item_id):
     character = get_object_or_404(Character, id=character_id)
     item = get_object_or_404(Item, id=item_id)
@@ -204,7 +200,11 @@ def battle_setup(request, character_id):
         id=character_id
     )
 
-    enemies = Enemy.objects.all()
+    enemies = Enemy.objects.all().order_by(
+        "level",
+        "is_boss",
+        "name",
+    )
 
     return render(request, "game/battle_setup.html", {
         "character": character,

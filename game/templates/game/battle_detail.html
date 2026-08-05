@@ -231,12 +231,21 @@
     {% endif %}
 
     <footer class="battle-footer">
-        <a
-            class="back-link"
-            href="{% url 'game:character_list' %}"
-        >
-            ← Powrót do listy postaci
-        </a>
+        {% if battle.status == "ONGOING" %}
+            <a
+                class="back-link"
+                href="{% url 'game:battle_setup' battle.character.id %}"
+            >
+                ← Powrót do wyboru przeciwnika
+            </a>
+        {% else %}
+            <a
+                class="button button-primary"
+                href="{% url 'game:battle_setup' battle.character.id %}"
+            >
+                ⚔ Wybierz kolejnego przeciwnika
+            </a>
+        {% endif %}
     </footer>
 
 </main>

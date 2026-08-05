@@ -4,7 +4,13 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
-from .combat import process_turn, use_potion
+from .combat import (
+    calculate_enemy_damage,
+    calculate_player_damage,
+    process_turn,
+    use_potion,
+)
+
 from .models import (
     Battle,
     Character,
@@ -131,7 +137,7 @@ class ProcessTurnTests(TestCase):
 
         self.assertEqual(battle.status, Battle.Status.ONGOING)
         self.assertEqual(battle.enemy_current_hp, 22)
-        self.assertEqual(battle.character_current_hp, 97)
+        self.assertEqual(battle.character_current_hp, 94)
         self.assertEqual(battle.turn_number, 2)
 
         self.assertEqual(self.character.experience, 0)
@@ -205,8 +211,8 @@ class ProcessTurnTests(TestCase):
         inventory_item.refresh_from_db()
 
         self.assertEqual(result["healed"], 30)
-        self.assertEqual(result["enemy_damage"], 3)
-        self.assertEqual(battle.character_current_hp, 77)
+        self.assertEqual(result["enemy_damage"], 6)
+        self.assertEqual(battle.character_current_hp, 74)
         self.assertEqual(battle.turn_number, 2)
         self.assertEqual(inventory_item.quantity, 1)
 
@@ -243,7 +249,7 @@ class ProcessTurnTests(TestCase):
         battle.refresh_from_db()
 
         self.assertEqual(result["healed"], 5)
-        self.assertEqual(battle.character_current_hp, 97)
+        self.assertEqual(battle.character_current_hp, 94)
         self.assertFalse(
             InventoryItem.objects.filter(id=inventory_item.id).exists()
         )
@@ -355,3 +361,84 @@ class ProcessTurnTests(TestCase):
 
         self.assertIsNotNone(response.context["turn_result"])
         self.assertNotIn(session_key, self.client.session)
+
+    @patch("game.combat.random.randint", return_value=0)
+    def test_weapon_uses_correct_character_stat(self, mocked_randint):
+        self.character.strength = 16
+        self.character.agility = 18
+        self.character.intelligence = 20
+        self.character.save()
+
+        enemy = Enemy.objects.create(
+            name="Cel treningowy",
+            max_hp=100,
+            defense=4,
+        )
+
+        weapon_cases = [
+            {
+                "name": "Miecz testowy",
+                "type": Item.Type.SWORD,
+                "power": 5,
+                "expected_damage": 17,
+            },
+            {
+                "name": "Łuk testowy",
+                "type": Item.Type.BOW,
+                "power": 6,
+                "expected_damage": 20,
+            },
+            {
+                "name": "Laska testowa",
+                "type": Item.Type.STAFF,
+                "power": 4,
+                "expected_damage": 20,
+            },
+        ]
+
+        for weapon_case in weapon_cases:
+            with self.subTest(weapon=weapon_case["name"]):
+                weapon = Item.objects.create(
+                    name=weapon_case["name"],
+                    type=weapon_case["type"],
+                    power=weapon_case["power"],
+                )
+
+                self.character.equipment.weapon = weapon
+                self.character.equipment.save()
+
+                damage = calculate_player_damage(
+                    self.character,
+                    enemy
+                )
+
+                self.assertEqual(
+                    damage,
+                    weapon_case["expected_damage"]
+                )
+
+    @patch("game.combat.random.randint", return_value=0)
+    def test_armor_and_agility_reduce_enemy_damage(self,mocked_randint):
+        self.character.agility = 12
+        self.character.save()
+
+        armor = Item.objects.create(
+            name="Pancerz testowy",
+            type=Item.Type.ARMOR,
+            power=9,
+        )
+
+        self.character.equipment.armor = armor
+        self.character.equipment.save()
+
+        enemy = Enemy.objects.create(
+            name="Silny przeciwnik",
+            attack=16,
+        )
+
+        damage = calculate_enemy_damage(
+            enemy,
+            self.character
+        )
+
+        self.assertEqual(damage, 10)

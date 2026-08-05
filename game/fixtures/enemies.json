@@ -1,0 +1,182 @@
+[
+  {
+    "model": "game.enemy",
+    "pk": 1,
+    "fields": {
+      "name": "Goblin",
+      "description": "Mały i słaby przeciwnik, odpowiedni na pierwszą walkę.",
+      "level": 1,
+      "max_hp": 20,
+      "attack": 4,
+      "defense": 1,
+      "experience_reward": 10,
+      "gold_reward": 5,
+      "is_boss": false
+    }
+  },
+  {
+    "model": "game.enemy",
+    "pk": 2,
+    "fields": {
+      "name": "Dziki wilk",
+      "description": "Szybkie leśne stworzenie atakujące ostrymi kłami.",
+      "level": 1,
+      "max_hp": 24,
+      "attack": 6,
+      "defense": 1,
+      "experience_reward": 15,
+      "gold_reward": 7,
+      "is_boss": false
+    }
+  },
+  {
+    "model": "game.enemy",
+    "pk": 3,
+    "fields": {
+      "name": "Bandyta",
+      "description": "Rozbójnik czyhający na podróżników przy głównym trakcie.",
+      "level": 2,
+      "max_hp": 35,
+      "attack": 8,
+      "defense": 3,
+      "experience_reward": 25,
+      "gold_reward": 12,
+      "is_boss": false
+    }
+  },
+  {
+    "model": "game.enemy",
+    "pk": 4,
+    "fields": {
+      "name": "Szkielet wojownik",
+      "description": "Nieumarły wojownik chroniony przez pozostałości starej zbroi.",
+      "level": 2,
+      "max_hp": 40,
+      "attack": 9,
+      "defense": 4,
+      "experience_reward": 30,
+      "gold_reward": 15,
+      "is_boss": false
+    }
+  },
+  {
+    "model": "game.enemy",
+    "pk": 5,
+    "fields": {
+      "name": "Ork",
+      "description": "Silny wojownik posługujący się ciężką, wyszczerbioną bronią.",
+      "level": 3,
+      "max_hp": 55,
+      "attack": 12,
+      "defense": 5,
+      "experience_reward": 45,
+      "gold_reward": 22,
+      "is_boss": false
+    }
+  },
+  {
+    "model": "game.enemy",
+    "pk": 6,
+    "fields": {
+      "name": "Troll jaskiniowy",
+      "description": "Wytrzymały przeciwnik zamieszkujący wilgotne jaskinie.",
+      "level": 4,
+      "max_hp": 80,
+      "attack": 15,
+      "defense": 7,
+      "experience_reward": 70,
+      "gold_reward": 35,
+      "is_boss": false
+    }
+  },
+  {
+    "model": "game.enemy",
+    "pk": 7,
+    "fields": {
+      "name": "Nekromanta",
+      "description": "Mroczny mag wykorzystujący zakazaną magię umarłych.",
+      "level": 5,
+      "max_hp": 70,
+      "attack": 18,
+      "defense": 6,
+      "experience_reward": 90,
+      "gold_reward": 50,
+      "is_boss": false
+    }
+  },
+  {
+    "model": "game.enemy",
+    "pk": 8,
+    "fields": {
+      "name": "Ogr wódz",
+      "description": "Olbrzymi przywódca plemienia, odporny na zwykłe ataki.",
+      "level": 5,
+      "max_hp": 120,
+      "attack": 19,
+      "defense": 9,
+      "experience_reward": 150,
+      "gold_reward": 90,
+      "is_boss": true
+    }
+  },
+  {
+    "model": "game.enemy",
+    "pk": 9,
+    "fields": {
+      "name": "Mroczny rycerz",
+      "description": "Upadły wojownik zakuty w ciężki, przeklęty pancerz.",
+      "level": 6,
+      "max_hp": 110,
+      "attack": 22,
+      "defense": 11,
+      "experience_reward": 140,
+      "gold_reward": 80,
+      "is_boss": false
+    }
+  },
+  {
+    "model": "game.enemy",
+    "pk": 10,
+    "fields": {
+      "name": "Wiwerna",
+      "description": "Skrzydlaty drapieżnik atakujący pazurami i jadowitym ogonem.",
+      "level": 7,
+      "max_hp": 140,
+      "attack": 26,
+      "defense": 12,
+      "experience_reward": 200,
+      "gold_reward": 120,
+      "is_boss": false
+    }
+  },
+  {
+    "model": "game.enemy",
+    "pk": 11,
+    "fields": {
+      "name": "Demon otchłani",
+      "description": "Potężna istota przywołana z najgłębszych czeluści.",
+      "level": 8,
+      "max_hp": 180,
+      "attack": 30,
+      "defense": 15,
+      "experience_reward": 280,
+      "gold_reward": 180,
+      "is_boss": false
+    }
+  },
+  {
+    "model": "game.enemy",
+    "pk": 12,
+    "fields": {
+      "name": "Pradawny smok",
+      "description": "Legendarny władca gór i najgroźniejszy przeciwnik w krainie.",
+      "level": 10,
+      "max_hp": 300,
+      "attack": 38,
+      "defense": 20,
+      "experience_reward": 500,
+      "gold_reward": 350,
+      "is_boss": true
+    }
+  }
+]
