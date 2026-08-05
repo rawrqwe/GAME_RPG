@@ -751,3 +751,77 @@ class ProcessTurnTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Battle.objects.count(), 0)
+
+    def test_character_cannot_start_battle_with_enemy_too_high_level(
+        self
+    ):
+        enemy = Enemy.objects.create(
+            name="Zbyt silny przeciwnik",
+            level=3,
+            max_hp=100,
+        )
+
+        response = self.client.post(
+            reverse(
+                "game:start_battle",
+                args=[
+                    self.character.id,
+                    enemy.id,
+                ]
+            )
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Battle.objects.count(), 0)
+
+    def test_battle_setup_marks_enemy_difficulty(self):
+        easy_enemy = Enemy.objects.create(
+            name="Łatwy przeciwnik",
+            level=1,
+        )
+
+        hard_enemy = Enemy.objects.create(
+            name="Trudny przeciwnik",
+            level=2,
+        )
+
+        locked_enemy = Enemy.objects.create(
+            name="Zablokowany przeciwnik",
+            level=3,
+        )
+
+        response = self.client.get(
+            reverse(
+                "game:battle_setup",
+                args=[self.character.id]
+            )
+        )
+
+        entries = response.context[
+            "enemy_entries"
+        ]
+
+        entries_by_enemy = {
+            entry["enemy"].id: entry
+            for entry in entries
+        }
+
+        self.assertEqual(
+            entries_by_enemy[easy_enemy.id][
+                "difficulty_label"
+            ],
+            "Równy"
+        )
+
+        self.assertEqual(
+            entries_by_enemy[hard_enemy.id][
+                "difficulty_label"
+            ],
+            "Trudny"
+        )
+
+        self.assertFalse(
+            entries_by_enemy[locked_enemy.id][
+                "available"
+            ]
+        )

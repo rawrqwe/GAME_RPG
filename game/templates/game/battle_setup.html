@@ -4,7 +4,11 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>
         Wybór przeciwnika — {{ character.name }}
@@ -123,94 +127,135 @@
     <section class="panel">
         <div class="section-heading">
             <div>
-                <p class="section-label">Arena</p>
+                <p class="section-label">
+                    Arena
+                </p>
+
                 <h2>Dostępni przeciwnicy</h2>
             </div>
 
             <p>
-                Wybierz przeciwnika, aby rozpocząć walkę.
+                Możesz walczyć z przeciwnikiem mającym
+                maksymalnie o jeden poziom więcej.
             </p>
         </div>
 
         <div class="enemy-grid">
-            {% for enemy in enemies %}
+            {% for entry in enemy_entries %}
                 <article
                     class="
                         setup-enemy-card
-                        {% if enemy.is_boss %}
+                        {% if entry.enemy.is_boss %}
                             boss-card
+                        {% endif %}
+                        {% if not entry.available %}
+                            locked-enemy-card
                         {% endif %}
                     "
                 >
                     <div class="enemy-heading">
-                        <div>
+                        <div class="enemy-title">
                             <p class="enemy-type">
-                                {% if enemy.is_boss %}
+                                {% if entry.enemy.is_boss %}
                                     Boss
                                 {% else %}
                                     Przeciwnik
                                 {% endif %}
                             </p>
 
-                            <h3>{{ enemy.name }}</h3>
+                            <h3>
+                                {{ entry.enemy.name }}
+                            </h3>
                         </div>
 
-                        <span class="enemy-level">
-                            Poziom {{ enemy.level }}
-                        </span>
+                        <div class="enemy-badges">
+                            <span class="enemy-level">
+                                Poziom {{ entry.enemy.level }}
+                            </span>
+
+                            <span
+                                class="
+                                    difficulty-badge
+                                    {{ entry.difficulty_class }}
+                                "
+                            >
+                                {{ entry.difficulty_label }}
+                            </span>
+                        </div>
                     </div>
 
-                    {% if enemy.description %}
+                    {% if entry.enemy.description %}
                         <p class="enemy-description">
-                            {{ enemy.description }}
+                            {{ entry.enemy.description }}
                         </p>
                     {% endif %}
 
                     <ul class="enemy-statistics">
                         <li>
                             <span>HP</span>
-                            <strong>{{ enemy.max_hp }}</strong>
+                            <strong>{{ entry.enemy.max_hp }}</strong>
                         </li>
 
                         <li>
                             <span>Atak</span>
-                            <strong>{{ enemy.attack }}</strong>
+                            <strong>{{ entry.enemy.attack }}</strong>
                         </li>
 
                         <li>
                             <span>Obrona</span>
-                            <strong>{{ enemy.defense }}</strong>
+                            <strong>{{ entry.enemy.defense }}</strong>
                         </li>
                     </ul>
 
                     <div class="enemy-rewards">
-                        <p>Nagrody za zwycięstwo</p>
+                        <p>
+                            Nagrody za zwycięstwo
+                        </p>
 
                         <div>
                             <span>
-                                ★ {{ enemy.experience_reward }} XP
+                                ★ {{ entry.enemy.experience_reward }} XP
                             </span>
 
                             <span>
-                                ◆ {{ enemy.gold_reward }} złota
+                                ◆ {{ entry.enemy.gold_reward }} złota
                             </span>
                         </div>
                     </div>
 
-                    <form
-                        class="start-battle-form"
-                        method="post"
-                        action="{% url 'game:start_battle' character.id enemy.id %}"
-                    >
-                        {% csrf_token %}
-
-                        <button
-                            class="button button-primary start-battle-button"
-                            type="submit"
+                    {% if entry.available %}
+                        <form
+                            class="start-battle-form"
+                            method="post"
+                            action="{% url 'game:start_battle' character.id entry.enemy.id %}"
                         >
-                            ⚔ Rozpocznij walkę
-                        </button>
-                    </form>
+                            {% csrf_token %}
+
+                            <button
+                                class="button button-primary start-battle-button"
+                                type="submit"
+                            >
+                                ⚔ Rozpocznij walkę
+                            </button>
+                        </form>
+                    {% else %}
+                        <div class="locked-enemy-information">
+                            <p>
+                                Wymagany poziom bohatera:
+                                <strong>
+                                    {{ entry.enemy.level|add:"-1" }}
+                                </strong>
+                            </p>
+
+                            <button
+                                class="button start-battle-button locked-button"
+                                type="button"
+                                disabled
+                            >
+                                Przeciwnik zablokowany
+                            </button>
+                        </div>
+                    {% endif %}
                 </article>
             {% empty %}
                 <p class="empty-message">

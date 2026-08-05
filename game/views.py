@@ -25,6 +25,53 @@ def character_list(request):
         "enemies": enemies,
     })
 
+MAX_ENEMY_LEVEL_ADVANTAGE = 1
+
+
+def can_character_fight_enemy(character, enemy):
+    maximum_enemy_level = (
+        character.level
+        + MAX_ENEMY_LEVEL_ADVANTAGE
+    )
+
+    return enemy.level <= maximum_enemy_level
+
+
+def get_enemy_difficulty(character, enemy):
+    level_difference = (
+        enemy.level
+        - character.level
+    )
+
+    if not can_character_fight_enemy(
+        character,
+        enemy
+    ):
+        return {
+            "label": "Zablokowany",
+            "css_class": "difficulty-locked",
+            "available": False,
+        }
+
+    if level_difference < 0:
+        return {
+            "label": "Łatwy",
+            "css_class": "difficulty-easy",
+            "available": True,
+        }
+
+    if level_difference == 0:
+        return {
+            "label": "Równy",
+            "css_class": "difficulty-equal",
+            "available": True,
+        }
+
+    return {
+        "label": "Trudny",
+        "css_class": "difficulty-hard",
+        "available": True,
+    }
 
 @require_POST
 def start_battle(request, character_id, enemy_id):
@@ -37,6 +84,20 @@ def start_battle(request, character_id, enemy_id):
         Enemy,
         id=enemy_id
     )
+
+    if not can_character_fight_enemy(
+        character,
+        enemy
+    ):
+        messages.error(
+            request,
+            "Ten przeciwnik ma zbyt wysoki poziom."
+        )
+
+        return redirect(
+            "game:battle_setup",
+            character_id=character.id
+        )
 
     if character.current_hp <= 0:
         messages.error(
@@ -240,10 +301,35 @@ def battle_setup(request, character_id):
         "name",
     )
 
-    return render(request, "game/battle_setup.html", {
-        "character": character,
-        "enemies": enemies,
-    })
+    enemy_entries = []
+
+    for enemy in enemies:
+        difficulty = get_enemy_difficulty(
+            character,
+            enemy
+        )
+
+        enemy_entries.append({
+            "enemy": enemy,
+            "difficulty_label": (
+                difficulty["label"]
+            ),
+            "difficulty_class": (
+                difficulty["css_class"]
+            ),
+            "available": (
+                difficulty["available"]
+            ),
+        })
+
+    return render(
+        request,
+        "game/battle_setup.html",
+        {
+            "character": character,
+            "enemy_entries": enemy_entries,
+        }
+    )
 
 @require_POST
 def rest_character(request, character_id):

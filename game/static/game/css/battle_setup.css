@@ -73,6 +73,10 @@
     text-transform: uppercase;
 }
 
+.rest-form {
+    flex-shrink: 0;
+}
+
 .section-heading {
     display: flex;
     justify-content: space-between;
@@ -120,6 +124,7 @@
 
 .setup-enemy-card.boss-card {
     border-color: var(--gold);
+
     box-shadow:
         inset 0 0 24px rgba(215, 168, 75, 0.08);
 }
@@ -127,24 +132,83 @@
 .enemy-heading {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: nowrap;
     gap: 16px;
-    align-items: start;
+}
+
+.enemy-title {
+    min-width: 0;
 }
 
 .enemy-heading h3 {
     margin: 6px 0 0;
+
     font-size: 24px;
+    overflow-wrap: break-word;
+}
+
+.enemy-badges {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 6px;
 }
 
 .enemy-level {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
     flex-shrink: 0;
+
     padding: 6px 10px;
 
     color: var(--text-muted);
     font-size: 13px;
+    white-space: nowrap;
 
     border: 1px solid var(--border);
     border-radius: 20px;
+}
+
+.difficulty-badge {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+
+    padding: 5px 9px;
+
+    font-size: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+
+    border: 1px solid;
+    border-radius: 20px;
+}
+
+.difficulty-easy {
+    color: #8ee0ad;
+    border-color: #357b59;
+    background-color: rgba(53, 123, 89, 0.18);
+}
+
+.difficulty-equal {
+    color: #8db9f0;
+    border-color: #568bd1;
+    background-color: rgba(86, 139, 209, 0.18);
+}
+
+.difficulty-hard {
+    color: #f2c26f;
+    border-color: #b17e2d;
+    background-color: rgba(177, 126, 45, 0.18);
+}
+
+.difficulty-locked {
+    color: #aaa3b5;
+    border-color: #514a5a;
+    background-color: rgba(81, 74, 90, 0.2);
 }
 
 .enemy-description {
@@ -166,6 +230,7 @@
 .enemy-statistics li {
     display: grid;
     gap: 3px;
+
     padding: 10px;
 
     text-align: center;
@@ -185,11 +250,13 @@
 .enemy-rewards {
     margin-top: auto;
     padding-top: 14px;
+
     border-top: 1px solid var(--border);
 }
 
 .enemy-rewards p {
     margin: 0 0 7px;
+
     color: var(--text-muted);
     font-size: 13px;
 }
@@ -203,17 +270,43 @@
     font-weight: bold;
 }
 
+.start-battle-form {
+    width: 100%;
+}
+
 .start-battle-button {
     width: 100%;
 }
 
-
-.rest-form {
-    flex-shrink: 0;
+.locked-enemy-card {
+    opacity: 0.55;
 }
 
-.start-battle-form {
-    width: 100%;
+.locked-enemy-card:hover {
+    opacity: 0.75;
+}
+
+.locked-enemy-information {
+    display: grid;
+    gap: 10px;
+}
+
+.locked-enemy-information p {
+    margin: 0;
+
+    color: var(--text-muted);
+    font-size: 13px;
+    text-align: center;
+}
+
+.locked-button,
+.locked-button:hover {
+    color: #aaa3b5;
+    cursor: not-allowed;
+
+    background-color: #514a5a;
+    box-shadow: none;
+    transform: none;
 }
 
 .messages {
@@ -247,5 +340,27 @@
 
     .enemy-rewards div {
         flex-direction: column;
+    }
+}
+
+@media (max-width: 420px) {
+    .enemy-heading {
+        gap: 10px;
+    }
+
+    .enemy-heading h3 {
+        font-size: 20px;
+    }
+
+    .enemy-badges {
+        gap: 4px;
+    }
+
+    .enemy-level,
+    .difficulty-badge {
+        padding-right: 7px;
+        padding-left: 7px;
+
+        font-size: 11px;
     }
 }
