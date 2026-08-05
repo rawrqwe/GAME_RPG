@@ -1,9 +1,20 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.shortcuts import (
+    get_object_or_404,
+    redirect,
+    render,
+)
+from django.views.decorators.http import require_POST
 
 from .combat import process_turn, use_potion
-from .models import Character, Item, InventoryItem
-from .models import Enemy, Battle
-from .shop import buy_item, ShopError, sell_item
+from .models import (
+    Battle,
+    Character,
+    Enemy,
+    InventoryItem,
+    Item,
+)
+from .shop import ShopError, buy_item, sell_item
 
 
 def character_list(request):
@@ -15,9 +26,29 @@ def character_list(request):
     })
 
 
+@require_POST
 def start_battle(request, character_id, enemy_id):
-    character = get_object_or_404(Character, id=character_id)
-    enemy = get_object_or_404(Enemy, id=enemy_id)
+    character = get_object_or_404(
+        Character,
+        id=character_id
+    )
+
+    enemy = get_object_or_404(
+        Enemy,
+        id=enemy_id
+    )
+
+    if character.current_hp <= 0:
+        messages.error(
+            request,
+            "Postać nie ma punktów życia. "
+            "Odpocznij przed rozpoczęciem walki."
+        )
+
+        return redirect(
+            "game:battle_setup",
+            character_id=character.id
+        )
 
     battle = Battle.objects.create(
         character=character,
@@ -26,7 +57,10 @@ def start_battle(request, character_id, enemy_id):
         enemy_current_hp=enemy.max_hp,
     )
 
-    return redirect("game:battle_detail", battle_id=battle.id)
+    return redirect(
+        "game:battle_detail",
+        battle_id=battle.id
+    )
 
 
 def battle_detail(request, battle_id):
@@ -210,3 +244,30 @@ def battle_setup(request, character_id):
         "character": character,
         "enemies": enemies,
     })
+
+@require_POST
+def rest_character(request, character_id):
+    character = get_object_or_404(
+        Character,
+        id=character_id
+    )
+
+    character.current_hp = character.max_hp
+    character.current_mana = character.max_mana
+
+    character.save(
+        update_fields=[
+            "current_hp",
+            "current_mana",
+        ]
+    )
+
+    messages.success(
+        request,
+        "Postać odpoczęła i odzyskała siły."
+    )
+
+    return redirect(
+        "game:battle_setup",
+        character_id=character.id
+    )

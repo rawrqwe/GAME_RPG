@@ -7,24 +7,24 @@ def get_player_attack_stat(character, weapon):
     equipment = character.equipment
 
     strength = (
-        character.strength
-        + equipment.get_stat_bonus(
-            Item.BonusStats.STRENGTH
-        )
+            character.strength
+            + equipment.get_stat_bonus(
+        Item.BonusStats.STRENGTH
+    )
     )
 
     agility = (
-        character.agility
-        + equipment.get_stat_bonus(
-            Item.BonusStats.AGILITY
-        )
+            character.agility
+            + equipment.get_stat_bonus(
+        Item.BonusStats.AGILITY
+    )
     )
 
     intelligence = (
-        character.intelligence
-        + equipment.get_stat_bonus(
-            Item.BonusStats.INTELLIGENCE
-        )
+            character.intelligence
+            + equipment.get_stat_bonus(
+        Item.BonusStats.INTELLIGENCE
+    )
     )
 
     if weapon is None:
@@ -55,9 +55,9 @@ def calculate_player_damage(character, enemy):
     variation = random.randint(-2, 2)
 
     damage = (
-        attack_power
-        + variation
-        - enemy.defense
+            attack_power
+            + variation
+            - enemy.defense
     )
 
     return max(damage, 1)
@@ -75,27 +75,36 @@ def calculate_enemy_damage(enemy, character):
     )
 
     effective_agility = (
-        character.agility
-        + agility_bonus
+            character.agility
+            + agility_bonus
     )
 
     agility_defense = effective_agility // 4
     armor_defense = armor_power // 5
 
     defense = (
-        agility_defense
-        + armor_defense
+            agility_defense
+            + armor_defense
     )
 
     variation = random.randint(-2, 2)
 
     damage = (
-        enemy.attack
-        + variation
-        - defense
+            enemy.attack
+            + variation
+            - defense
     )
 
     return max(damage, 1)
+
+
+def sync_character_hp(battle):
+    character = battle.character
+    character.current_hp = battle.character_current_hp
+
+    character.save(
+        update_fields=["current_hp"]
+    )
 
 
 def player_attack(battle):
@@ -113,6 +122,11 @@ def player_attack(battle):
         battle.status = Battle.Status.WON
 
         leveled_up = award_rewards(battle)
+
+        if leveled_up:
+            battle.character_current_hp = (
+                battle.character.current_hp
+            )
 
     battle.save()
 
@@ -170,6 +184,8 @@ def process_turn(battle):
         battle.turn_number += 1
         battle.save()
 
+    sync_character_hp(battle)
+
     return result
 
 
@@ -188,8 +204,8 @@ def use_potion(battle, inventory_item):
     )
 
     new_hp = (
-        hp_before_healing
-        + item.heal_amount
+            hp_before_healing
+            + item.heal_amount
     )
 
     battle.character_current_hp = min(
@@ -198,8 +214,8 @@ def use_potion(battle, inventory_item):
     )
 
     actual_healing = (
-        battle.character_current_hp
-        - hp_before_healing
+            battle.character_current_hp
+            - hp_before_healing
     )
 
     battle.save()
@@ -223,6 +239,8 @@ def use_potion(battle, inventory_item):
 
         battle.turn_number += 1
         battle.save()
+
+    sync_character_hp(battle)
 
     return result
 

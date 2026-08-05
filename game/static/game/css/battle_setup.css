@@ -207,6 +207,23 @@
     width: 100%;
 }
 
+
+.rest-form {
+    flex-shrink: 0;
+}
+
+.start-battle-form {
+    width: 100%;
+}
+
+.messages {
+    margin-bottom: 24px;
+}
+
+.messages .alert {
+    margin: 0;
+}
+
 @media (max-width: 800px) {
     .selected-character {
         align-items: stretch;

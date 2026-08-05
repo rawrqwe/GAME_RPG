@@ -624,3 +624,130 @@ class ProcessTurnTests(TestCase):
         self.assertIsNone(
             self.character.equipment.shield
         )
+
+    def test_fractional_growth_accumulates_between_levels(self):
+        character_class = CharacterClass.objects.create(
+            name="Klasa z ułamkowym wzrostem",
+            base_hp=100,
+            base_mana=10,
+            base_strength=10,
+            base_agility=10,
+            base_intelligence=10,
+            hp_growth=3.5,
+            mana_growth=2.5,
+            strength_growth=2.5,
+            agility_growth=1.5,
+            intelligence_growth=0.5,
+        )
+
+        character = Character.objects.create(
+            owner=self.character.owner,
+            name="Rosnąca postać",
+            race=self.character.race,
+            character_class=character_class,
+        )
+
+        character.experience = 300
+        leveled_up = character.try_level_up()
+
+        self.assertTrue(leveled_up)
+        self.assertEqual(character.level, 3)
+        self.assertEqual(character.experience, 0)
+
+        self.assertEqual(character.max_hp, 107)
+        self.assertEqual(character.max_mana, 15)
+
+        self.assertEqual(character.strength, 15)
+        self.assertEqual(character.agility, 13)
+        self.assertEqual(character.intelligence, 11)
+
+        self.assertEqual(
+            character.current_hp,
+            character.max_hp
+        )
+
+        self.assertEqual(
+            character.current_mana,
+            character.max_mana
+        )
+
+    @patch("game.combat.random.randint", return_value=0)
+    def test_turn_updates_character_current_hp(self,mocked_randint):
+        enemy = Enemy.objects.create(
+            name="Przeciwnik testowy",
+            max_hp=30,
+            attack=8,
+            defense=2,
+        )
+
+        battle = Battle.objects.create(
+            character=self.character,
+            enemy=enemy,
+            character_current_hp=(
+                self.character.current_hp
+            ),
+            enemy_current_hp=enemy.max_hp,
+        )
+
+        process_turn(battle)
+
+        battle.refresh_from_db()
+        self.character.refresh_from_db()
+
+        self.assertEqual(
+            self.character.current_hp,
+            battle.character_current_hp
+        )
+
+        self.assertEqual(
+            self.character.current_hp,
+            94
+        )
+
+    def test_rest_restores_health_and_mana(self):
+        self.character.current_hp = 1
+        self.character.current_mana = 0
+        self.character.save()
+
+        response = self.client.post(
+            reverse(
+                "game:rest_character",
+                args=[self.character.id]
+            )
+        )
+
+        self.character.refresh_from_db()
+
+        self.assertEqual(response.status_code, 302)
+
+        self.assertEqual(
+            self.character.current_hp,
+            self.character.max_hp
+        )
+
+        self.assertEqual(
+            self.character.current_mana,
+            self.character.max_mana
+        )
+
+    def test_defeated_character_cannot_start_battle(self):
+        self.character.current_hp = 0
+        self.character.save()
+
+        enemy = Enemy.objects.create(
+            name="Przeciwnik testowy",
+            max_hp=20,
+        )
+
+        response = self.client.post(
+            reverse(
+                "game:start_battle",
+                args=[
+                    self.character.id,
+                    enemy.id,
+                ]
+            )
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Battle.objects.count(), 0)

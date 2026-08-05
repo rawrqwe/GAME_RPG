@@ -145,18 +145,55 @@ class Character(models.Model):
 
     def try_level_up(self):
         leveled_up = False
+        growth = self.character_class
 
         while self.experience >= self.get_xp_to_next_level():
             xp_needed = self.get_xp_to_next_level()
             self.experience -= xp_needed
+
+            old_level = self.level
             self.level += 1
 
-            growth = self.character_class
-            self.max_hp += int(growth.hp_growth)
-            self.max_mana += int(growth.mana_growth)
-            self.strength += int(growth.strength_growth)
-            self.agility += int(growth.agility_growth)
-            self.intelligence += int(growth.intelligence_growth)
+            old_growth_steps = old_level - 1
+            new_growth_steps = self.level - 1
+
+            hp_increase = (
+                    int(growth.hp_growth * new_growth_steps)
+                    - int(growth.hp_growth * old_growth_steps)
+            )
+
+            mana_increase = (
+                    int(growth.mana_growth * new_growth_steps)
+                    - int(growth.mana_growth * old_growth_steps)
+            )
+
+            strength_increase = (
+                    int(growth.strength_growth * new_growth_steps)
+                    - int(growth.strength_growth * old_growth_steps)
+            )
+
+            agility_increase = (
+                    int(growth.agility_growth * new_growth_steps)
+                    - int(growth.agility_growth * old_growth_steps)
+            )
+
+            intelligence_increase = (
+                    int(
+                        growth.intelligence_growth
+                        * new_growth_steps
+                    )
+                    - int(
+                growth.intelligence_growth
+                * old_growth_steps
+            )
+            )
+
+            self.max_hp += hp_increase
+            self.max_mana += mana_increase
+
+            self.strength += strength_increase
+            self.agility += agility_increase
+            self.intelligence += intelligence_increase
 
             self.current_hp = self.max_hp
             self.current_mana = self.max_mana
@@ -164,6 +201,7 @@ class Character(models.Model):
             leveled_up = True
 
         self.save()
+
         return leveled_up
 
     def __str__(self):

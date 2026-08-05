@@ -6,7 +6,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Wybór przeciwnika — {{ character.name }}</title>
+    <title>
+        Wybór przeciwnika — {{ character.name }}
+    </title>
 
     <link
         rel="stylesheet"
@@ -23,7 +25,9 @@
 <main class="page-container">
 
     <header class="page-header">
-        <p class="setup-label">Przygotowanie do walki</p>
+        <p class="setup-label">
+            Przygotowanie do walki
+        </p>
 
         <h1>Wybierz przeciwnika</h1>
 
@@ -33,9 +37,22 @@
         </p>
     </header>
 
+    {% if messages %}
+        <section class="messages">
+            {% for message in messages %}
+                <p class="alert">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        </section>
+    {% endif %}
+
     <section class="selected-character">
         <div>
-            <p class="section-label">Wybrany bohater</p>
+            <p class="section-label">
+                Wybrany bohater
+            </p>
+
             <h2>{{ character.name }}</h2>
 
             <p class="character-description">
@@ -53,9 +70,19 @@
 
             <li>
                 <span>HP</span>
+
                 <strong>
                     {{ character.current_hp }}
                     / {{ character.max_hp }}
+                </strong>
+            </li>
+
+            <li>
+                <span>Mana</span>
+
+                <strong>
+                    {{ character.current_mana }}
+                    / {{ character.max_mana }}
                 </strong>
             </li>
 
@@ -68,7 +95,29 @@
                 <span>Zręczność</span>
                 <strong>{{ character.agility }}</strong>
             </li>
+
+            <li>
+                <span>Inteligencja</span>
+                <strong>{{ character.intelligence }}</strong>
+            </li>
         </ul>
+
+        {% if character.current_hp < character.max_hp or character.current_mana < character.max_mana %}
+            <form
+                class="rest-form"
+                method="post"
+                action="{% url 'game:rest_character' character.id %}"
+            >
+                {% csrf_token %}
+
+                <button
+                    class="button button-success"
+                    type="submit"
+                >
+                    Odpocznij
+                </button>
+            </form>
+        {% endif %}
     </section>
 
     <section class="panel">
@@ -88,7 +137,9 @@
                 <article
                     class="
                         setup-enemy-card
-                        {% if enemy.is_boss %}boss-card{% endif %}
+                        {% if enemy.is_boss %}
+                            boss-card
+                        {% endif %}
                     "
                 >
                     <div class="enemy-heading">
@@ -146,12 +197,20 @@
                         </div>
                     </div>
 
-                    <a
-                        class="button button-primary start-battle-button"
-                        href="{% url 'game:start_battle' character.id enemy.id %}"
+                    <form
+                        class="start-battle-form"
+                        method="post"
+                        action="{% url 'game:start_battle' character.id enemy.id %}"
                     >
-                        ⚔ Rozpocznij walkę
-                    </a>
+                        {% csrf_token %}
+
+                        <button
+                            class="button button-primary start-battle-button"
+                            type="submit"
+                        >
+                            ⚔ Rozpocznij walkę
+                        </button>
+                    </form>
                 </article>
             {% empty %}
                 <p class="empty-message">
