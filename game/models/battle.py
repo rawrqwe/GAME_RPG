@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
 from .character import Character
 from .enemy import Enemy
 
@@ -13,22 +14,33 @@ class Battle(models.Model):
     character = models.ForeignKey(
         Character,
         on_delete=models.CASCADE,
-        verbose_name=_("Postać")
+        verbose_name=_("Postać"),
     )
+
     enemy = models.ForeignKey(
         Enemy,
         on_delete=models.CASCADE,
-        verbose_name=_("Przeciwnik")
+        verbose_name=_("Przeciwnik"),
     )
 
-    character_current_hp = models.IntegerField(_("Aktualne HP postaci"))
-    enemy_current_hp = models.IntegerField(_("Aktualne HP postaci"))
+    character_current_hp = models.IntegerField(
+        _("Aktualne HP postaci"),
+    )
+
+    character_current_mana = models.IntegerField(
+        _("Aktualna mana postaci"),
+        default=0,
+    )
+
+    enemy_current_hp = models.IntegerField(
+        _("Aktualne HP przeciwnika"),
+    )
 
     status = models.CharField(
         _("Status"),
         max_length=20,
         choices=Status.choices,
-        default=Status.ONGOING
+        default=Status.ONGOING,
     )
 
     turn_number = models.PositiveIntegerField(
@@ -37,4 +49,7 @@ class Battle(models.Model):
     )
 
     def __str__(self):
-        return f"{self.character.name} vs {self.enemy.name}"
+        return (
+            f"{self.character.name} "
+            f"vs {self.enemy.name}"
+        )

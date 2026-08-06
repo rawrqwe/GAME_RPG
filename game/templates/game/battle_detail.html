@@ -52,24 +52,39 @@
 
             <h2>{{ battle.character.name }}</h2>
 
-            <div class="hp-information">
+            <div class="resource-information">
                 <span>Punkty życia</span>
 
                 <strong>
                     {{ battle.character_current_hp }}
-                    / {{ battle.character.total_max_hp }}
+                    /
+                    {{ battle.character.total_max_hp }}
                 </strong>
             </div>
 
             <progress
-                class="hp-bar player-hp"
+                class="resource-bar player-hp"
                 value="{{ battle.character_current_hp }}"
                 max="{{ battle.character.total_max_hp }}"
                 aria-label="Punkty życia bohatera"
-            >
-                {{ battle.character_current_hp }}
-                / {{ battle.character.total_max_hp }}
-            </progress>
+            ></progress>
+
+            <div class="resource-information mana-information">
+                <span>Mana</span>
+
+                <strong>
+                    {{ battle.character_current_mana }}
+                    /
+                    {{ battle.character.total_max_mana }}
+                </strong>
+            </div>
+
+            <progress
+                class="resource-bar mana-bar"
+                value="{{ battle.character_current_mana }}"
+                max="{{ battle.character.total_max_mana }}"
+                aria-label="Mana bohatera"
+            ></progress>
         </article>
 
         <div class="versus">
@@ -83,24 +98,22 @@
 
             <h2>{{ battle.enemy.name }}</h2>
 
-            <div class="hp-information">
+            <div class="resource-information">
                 <span>Punkty życia</span>
 
                 <strong>
                     {{ battle.enemy_current_hp }}
-                    / {{ battle.enemy.max_hp }}
+                    /
+                    {{ battle.enemy.max_hp }}
                 </strong>
             </div>
 
             <progress
-                class="hp-bar enemy-hp"
+                class="resource-bar enemy-hp"
                 value="{{ battle.enemy_current_hp }}"
                 max="{{ battle.enemy.max_hp }}"
                 aria-label="Punkty życia przeciwnika"
-            >
-                {{ battle.enemy_current_hp }}
-                / {{ battle.enemy.max_hp }}
-            </progress>
+            ></progress>
         </article>
     </section>
 
@@ -109,17 +122,58 @@
             <h2>Przebieg ostatniej tury</h2>
 
             <div class="turn-events">
+                {% if turn_result.error %}
+                    <p class="turn-event error-event">
+                        <span>!</span>
+
+                        {{ turn_result.error }}
+                    </p>
+                {% endif %}
+
                 {% if turn_result.player_damage %}
-                    <p class="turn-event player-event">
-                        <span>⚔</span>
+                    <p
+                        class="
+                            turn-event
+                            {% if turn_result.skill_name %}
+                                skill-event
+                            {% else %}
+                                player-event
+                            {% endif %}
+                        "
+                    >
+                        {% if turn_result.skill_name %}
+                            <span>✦</span>
 
-                        {{ battle.character.name }}
-                        zadaje
+                            {{ battle.character.name }}
+                            używa umiejętności
 
-                        <strong>
-                            {{ turn_result.player_damage }}
-                            obrażeń
-                        </strong>.
+                            <strong>
+                                {{ turn_result.skill_name }}
+                            </strong>
+
+                            i zadaje
+
+                            <strong>
+                                {{ turn_result.player_damage }}
+                                obrażeń
+                            </strong>.
+
+                            Koszt:
+                            <strong>
+                                {{ turn_result.mana_cost }}
+                                many
+                            </strong>.
+                        {% else %}
+                            <span>⚔</span>
+
+                            {{ battle.character.name }}
+                            zadaje
+
+                            <strong>
+                                {{ turn_result.player_damage }}
+                                obrażeń
+                            </strong>.
+                        {% endif %}
                     </p>
                 {% endif %}
 
@@ -187,19 +241,53 @@
         <section class="battle-actions">
             <h2>Wybierz akcję</h2>
 
-            <form
-                method="post"
-                action="{% url 'game:battle_attack' battle.id %}"
-            >
-                {% csrf_token %}
-
-                <button
-                    class="attack-button"
-                    type="submit"
+            <div class="action-buttons">
+                <form
+                    method="post"
+                    action="{% url 'game:battle_attack' battle.id %}"
                 >
-                    ⚔ Atakuj
-                </button>
-            </form>
+                    {% csrf_token %}
+
+                    <button
+                        class="attack-button"
+                        type="submit"
+                    >
+                        ⚔ Zwykły atak
+                    </button>
+                </form>
+
+                {% if skill %}
+                    <form
+                        method="post"
+                        action="{% url 'game:battle_skill' battle.id %}"
+                    >
+                        {% csrf_token %}
+
+                        <button
+                            class="skill-button"
+                            type="submit"
+                            {% if battle.character_current_mana < skill.mana_cost %}
+                                disabled
+                            {% endif %}
+                        >
+                            ✦ {{ skill.name }}
+                        </button>
+
+                        <p class="skill-cost">
+                            Koszt:
+                            {{ skill.mana_cost }}
+                            many
+                        </p>
+                    </form>
+                {% endif %}
+            </div>
+
+            {% if skill and battle.character_current_mana < skill.mana_cost %}
+                <p class="not-enough-mana">
+                    Masz za mało many, aby użyć
+                    umiejętności klasowej.
+                </p>
+            {% endif %}
         </section>
 
         <section class="potions-section">
@@ -249,9 +337,7 @@
     {% else %}
         {% if battle.status == "WON" %}
             <section class="battle-end victory">
-                <p class="battle-end-icon">
-                    ★
-                </p>
+                <p class="battle-end-icon">★</p>
 
                 <h2>Zwycięstwo!</h2>
 
@@ -261,9 +347,7 @@
             </section>
         {% elif battle.status == "LOSE" %}
             <section class="battle-end defeat">
-                <p class="battle-end-icon">
-                    ☠
-                </p>
+                <p class="battle-end-icon">☠</p>
 
                 <h2>Porażka</h2>
 
@@ -284,7 +368,7 @@
             </a>
         {% else %}
             <a
-                class="button button-primary"
+                class="back-link"
                 href="{% url 'game:battle_setup' battle.character.id %}"
             >
                 ⚔ Wybierz kolejnego przeciwnika
