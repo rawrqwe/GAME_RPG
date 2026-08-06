@@ -25,27 +25,32 @@
 
 <body>
 <main class="page-container">
-<nav class="account-navigation">
-    <span>
-        Zalogowany użytkownik:
-        <strong>{{ request.user.username }}</strong>
-    </span>
 
-    <form
-        class="logout-form"
-        method="post"
-        action="{% url 'logout' %}"
-    >
-        {% csrf_token %}
+    <nav class="account-navigation top-navigation">
+        <span>
+            Zalogowany użytkownik:
 
-        <button
-            class="button button-secondary"
-            type="submit"
+            <strong>
+                {{ request.user.username }}
+            </strong>
+        </span>
+
+        <form
+            class="logout-form"
+            method="post"
+            action="{% url 'logout' %}"
         >
-            Wyloguj się
-        </button>
-    </form>
-</nav>
+            {% csrf_token %}
+
+            <button
+                class="button button-secondary"
+                type="submit"
+            >
+                Wyloguj się
+            </button>
+        </form>
+    </nav>
+
     <header class="page-header">
         <p class="page-label">
             Panel bohaterów
@@ -101,7 +106,8 @@
 
                             <strong>
                                 {{ character.current_hp }}
-                                / {{ character.total_max_hp }}
+                                /
+                                {{ character.total_max_hp }}
                             </strong>
                         </li>
 
@@ -110,7 +116,8 @@
 
                             <strong>
                                 {{ character.current_mana }}
-                                / {{ character.total_max_mana }}
+                                /
+                                {{ character.total_max_mana }}
                             </strong>
                         </li>
 
@@ -135,7 +142,11 @@
 
                     <div class="character-actions">
                         <a
-                            class="button button-primary battle-button"
+                            class="
+                                button
+                                button-primary
+                                battle-button
+                            "
                             href="{% url 'game:battle_setup' character.id %}"
                         >
                             ⚔ Wybierz przeciwnika
@@ -158,6 +169,7 @@
                         </div>
                     </div>
                 </article>
+
             {% empty %}
                 <p class="empty-message">
                     Nie utworzono jeszcze żadnej postaci.

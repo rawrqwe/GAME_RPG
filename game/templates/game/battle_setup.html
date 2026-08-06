@@ -28,6 +28,8 @@
 <body>
 <main class="page-container">
 
+    {% include "game/includes/game_navigation.html" with navigation_character=character active_page="battle" %}
+
     <header class="page-header">
         <p class="setup-label">
             Przygotowanie do walki
@@ -193,17 +195,26 @@
                     <ul class="enemy-statistics">
                         <li>
                             <span>HP</span>
-                            <strong>{{ entry.enemy.max_hp }}</strong>
+
+                            <strong>
+                                {{ entry.enemy.max_hp }}
+                            </strong>
                         </li>
 
                         <li>
                             <span>Atak</span>
-                            <strong>{{ entry.enemy.attack }}</strong>
+
+                            <strong>
+                                {{ entry.enemy.attack }}
+                            </strong>
                         </li>
 
                         <li>
                             <span>Obrona</span>
-                            <strong>{{ entry.enemy.defense }}</strong>
+
+                            <strong>
+                                {{ entry.enemy.defense }}
+                            </strong>
                         </li>
                     </ul>
 
@@ -214,11 +225,15 @@
 
                         <div>
                             <span>
-                                ★ {{ entry.enemy.experience_reward }} XP
+                                ★
+                                {{ entry.enemy.experience_reward }}
+                                XP
                             </span>
 
                             <span>
-                                ◆ {{ entry.enemy.gold_reward }} złota
+                                ◆
+                                {{ entry.enemy.gold_reward }}
+                                złota
                             </span>
                         </div>
                     </div>
@@ -232,7 +247,11 @@
                             {% csrf_token %}
 
                             <button
-                                class="button button-primary start-battle-button"
+                                class="
+                                    button
+                                    button-primary
+                                    start-battle-button
+                                "
                                 type="submit"
                             >
                                 ⚔ Rozpocznij walkę
@@ -242,13 +261,18 @@
                         <div class="locked-enemy-information">
                             <p>
                                 Wymagany poziom bohatera:
+
                                 <strong>
                                     {{ entry.enemy.level|add:"-1" }}
                                 </strong>
                             </p>
 
                             <button
-                                class="button start-battle-button locked-button"
+                                class="
+                                    button
+                                    start-battle-button
+                                    locked-button
+                                "
                                 type="button"
                                 disabled
                             >
@@ -257,6 +281,7 @@
                         </div>
                     {% endif %}
                 </article>
+
             {% empty %}
                 <p class="empty-message">
                     Nie ma obecnie dostępnych przeciwników.
@@ -264,29 +289,6 @@
             {% endfor %}
         </div>
     </section>
-
-    <nav class="page-navigation">
-        <a
-            class="button button-secondary"
-            href="{% url 'game:equipment_detail' character.id %}"
-        >
-            Ekwipunek
-        </a>
-
-        <a
-            class="button button-success"
-            href="{% url 'game:shop_detail' character.id %}"
-        >
-            Sklep
-        </a>
-
-        <a
-            class="button button-secondary"
-            href="{% url 'game:character_list' %}"
-        >
-            ← Zmień postać
-        </a>
-    </nav>
 
 </main>
 </body>

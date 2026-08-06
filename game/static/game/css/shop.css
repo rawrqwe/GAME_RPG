@@ -11,6 +11,7 @@
 
 .wallet {
     display: inline-block;
+
     margin: 18px 0 0;
     padding: 10px 18px;
 
@@ -24,35 +25,14 @@
     color: var(--gold-light);
 }
 
-/* Nawigacja sklepu */
-
-.shop-navigation {
-    position: sticky;
-    top: 12px;
-    z-index: 10;
-
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-
-    margin-bottom: 24px;
-    padding: 12px;
-
-    border: 1px solid var(--border);
-    border-radius: 12px;
-
-    background-color: rgba(18, 16, 23, 0.94);
-    box-shadow: 0 10px 24px var(--shadow);
-
-    backdrop-filter: blur(8px);
-}
-
 /* Główny układ sklepu */
 
 .shop-layout {
     display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+    grid-template-columns:
+        minmax(0, 2fr)
+        minmax(280px, 1fr);
+
     gap: 24px;
     align-items: start;
 }
@@ -103,7 +83,8 @@
 
     background-color: var(--surface-light);
 
-    transition: background-color 150ms ease;
+    transition:
+        background-color 150ms ease;
 }
 
 .category-header:hover {
@@ -127,7 +108,8 @@
     font-size: 26px;
     line-height: 1;
 
-    transition: transform 150ms ease;
+    transition:
+        transform 150ms ease;
 }
 
 .shop-category[open] .category-arrow {
@@ -161,10 +143,12 @@
 
 .shop-grid {
     display: grid;
+
     grid-template-columns: repeat(
         auto-fit,
         minmax(230px, 1fr)
     );
+
     gap: 16px;
 }
 
@@ -233,6 +217,7 @@
 
 .inventory-summary {
     margin: 0 0 18px;
+
     color: var(--text-muted);
     font-size: 14px;
 }
@@ -244,8 +229,8 @@
     max-height: 65vh;
     margin: 0;
     padding: 0 6px 0 0;
-    overflow-y: auto;
 
+    overflow-y: auto;
     list-style: none;
 }
 
@@ -303,7 +288,7 @@
     background-color: #756a82;
 }
 
-/* Widok na mniejszych ekranach */
+/* Mniejsze ekrany */
 
 @media (max-width: 900px) {
     .shop-layout {
@@ -317,20 +302,12 @@
     .inventory-list {
         max-height: none;
         padding-right: 0;
+
         overflow-y: visible;
     }
 }
 
 @media (max-width: 700px) {
-    .shop-navigation {
-        position: static;
-        flex-direction: column;
-    }
-
-    .shop-navigation .button {
-        width: 100%;
-    }
-
     .shop-grid {
         grid-template-columns: 1fr;
     }

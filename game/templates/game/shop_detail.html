@@ -4,7 +4,11 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Sklep — {{ character.name }}</title>
 
@@ -17,10 +21,17 @@
         rel="stylesheet"
         href="{% static 'game/css/shop.css' %}"
     >
+
+    <script
+        defer
+        src="{% static 'game/js/shop.js' %}"
+    ></script>
 </head>
 
 <body>
 <main class="page-container">
+
+    {% include "game/includes/game_navigation.html" with navigation_character=character active_page="shop" %}
 
     <header class="page-header">
         <p class="shop-label">Kupiec</p>
@@ -37,29 +48,6 @@
             <strong>{{ character.gold }}</strong>
         </p>
     </header>
-
-    <nav class="shop-navigation">
-        <a
-            class="button button-secondary"
-            href="{% url 'game:equipment_detail' character.id %}"
-        >
-            Ekwipunek
-        </a>
-
-        <a
-            class="button button-secondary"
-            href="{% url 'game:battle_setup' character.id %}"
-        >
-            ⚔ Wybór przeciwnika
-        </a>
-
-        <a
-            class="button button-secondary"
-            href="{% url 'game:character_list' %}"
-        >
-            ← Powrót do postaci
-        </a>
-    </nav>
 
     {% if error_message %}
         <p class="alert">
@@ -84,7 +72,10 @@
                     >
                         <summary class="category-header">
                             <span class="category-title">
-                                <span class="category-arrow">›</span>
+                                <span class="category-arrow">
+                                    ›
+                                </span>
+
                                 {{ category_name }}
                             </span>
 
@@ -109,7 +100,9 @@
                                                 {{ entry.item.get_type_display }}
                                             </p>
 
-                                            <h3>{{ entry.item.name }}</h3>
+                                            <h3>
+                                                {{ entry.item.name }}
+                                            </h3>
 
                                             {% if entry.item.description %}
                                                 <p class="item-description">
@@ -128,7 +121,9 @@
                                             </li>
 
                                             <li class="information-row">
-                                                <span>Wymagany poziom</span>
+                                                <span>
+                                                    Wymagany poziom
+                                                </span>
 
                                                 <strong>
                                                     {{ entry.item.required_level }}
@@ -174,16 +169,22 @@
                                                 {% csrf_token %}
 
                                                 <button
-                                                    class="button button-success shop-button"
+                                                    class="
+                                                        button
+                                                        button-success
+                                                        shop-button
+                                                    "
                                                     type="submit"
                                                 >
                                                     Kup
                                                 </button>
                                             </form>
+
                                         {% elif not entry.meets_level %}
                                             <p class="unavailable-reason">
                                                 Wymagany jest wyższy poziom.
                                             </p>
+
                                         {% elif not entry.can_afford %}
                                             <p class="unavailable-reason">
                                                 Masz za mało złota.
@@ -194,6 +195,7 @@
                             </div>
                         </div>
                     </details>
+
                 {% empty %}
                     <p class="empty-message">
                         Sklep nie ma obecnie żadnych przedmiotów.
@@ -223,7 +225,8 @@
                             </strong>
 
                             <span>
-                                Liczba: {{ inventory_item.quantity }}
+                                Liczba:
+                                {{ inventory_item.quantity }}
                             </span>
 
                             <span>
@@ -240,13 +243,18 @@
                             {% csrf_token %}
 
                             <button
-                                class="button button-danger sell-button"
+                                class="
+                                    button
+                                    button-danger
+                                    sell-button
+                                "
                                 type="submit"
                             >
                                 Sprzedaj
                             </button>
                         </form>
                     </li>
+
                 {% empty %}
                     <li class="empty-message">
                         Plecak jest pusty.

@@ -1,0 +1,62 @@
+<nav
+    class="page-navigation top-navigation"
+    aria-label="Główna nawigacja gry"
+>
+    <a
+        class="
+            button
+            {% if active_page == 'battle' %}
+                button-active
+            {% else %}
+                button-secondary
+            {% endif %}
+        "
+        href="{% url 'game:battle_setup' navigation_character.id %}"
+        {% if active_page == "battle" %}
+            aria-current="page"
+        {% endif %}
+    >
+        ⚔ Walka
+    </a>
+
+    <a
+        class="
+            button
+            {% if active_page == 'equipment' %}
+                button-active
+            {% else %}
+                button-secondary
+            {% endif %}
+        "
+        href="{% url 'game:equipment_detail' navigation_character.id %}"
+        {% if active_page == "equipment" %}
+            aria-current="page"
+        {% endif %}
+    >
+        Ekwipunek
+    </a>
+
+    <a
+        class="
+            button
+            {% if active_page == 'shop' %}
+                button-active
+            {% else %}
+                button-secondary
+            {% endif %}
+        "
+        href="{% url 'game:shop_detail' navigation_character.id %}"
+        {% if active_page == "shop" %}
+            aria-current="page"
+        {% endif %}
+    >
+        Sklep
+    </a>
+
+    <a
+        class="button button-secondary"
+        href="{% url 'game:character_list' %}"
+    >
+        ← Postacie
+    </a>
+</nav>

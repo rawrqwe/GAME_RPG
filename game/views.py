@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth import login
 from django.contrib.auth.decorators import (
     login_required,
 )
@@ -18,6 +19,7 @@ from .combat import (
     process_turn,
     use_potion,
 )
+from .forms import RegistrationForm
 from .models import (
     Battle,
     Character,
@@ -43,7 +45,44 @@ VALID_EQUIPMENT_SLOTS = {
     "gloves",
     "boots",
 }
+def register(request):
+    if request.user.is_authenticated:
+        return redirect(
+            "game:character_list"
+        )
 
+    if request.method == "POST":
+        form = RegistrationForm(
+            request.POST,
+        )
+
+        if form.is_valid():
+            user = form.save()
+
+            login(
+                request,
+                user,
+            )
+
+            messages.success(
+                request,
+                "Konto zostało utworzone "
+                "poprawnie.",
+            )
+
+            return redirect(
+                "game:character_list"
+            )
+    else:
+        form = RegistrationForm()
+
+    return render(
+        request,
+        "registration/register.html",
+        {
+            "form": form,
+        }
+    )
 
 def get_owned_character(
     request,
@@ -426,32 +465,48 @@ def shop_detail(request, character_id):
     inventory_items = (
         InventoryItem.objects.filter(
             character=character,
-        ).select_related("item")
+        )
+        .select_related("item")
+        .order_by(
+            "item__type",
+            "item__name",
+        )
     )
 
     error_message = request.GET.get(
         "error",
     )
 
-    weapon_types = {
-        Item.Type.SWORD,
-        Item.Type.BOW,
-        Item.Type.STAFF,
-    }
+    category_by_item_type = {
+        Item.Type.SWORD: "Broń",
+        Item.Type.BOW: "Broń",
+        Item.Type.STAFF: "Broń",
 
-    armor_types = {
-        Item.Type.SHIELD,
-        Item.Type.HELMET,
-        Item.Type.ARMOR,
-        Item.Type.LEGGINGS,
-        Item.Type.GLOVES,
-        Item.Type.BOOTS,
+        Item.Type.SHIELD: "Tarcze",
+        Item.Type.HELMET: "Hełmy",
+        Item.Type.ARMOR: "Pancerze",
+        Item.Type.LEGGINGS: "Spodnie",
+        Item.Type.GLOVES: "Rękawice",
+        Item.Type.BOOTS: "Buty",
+
+        Item.Type.POTION: "Mikstury",
+        Item.Type.MATERIAL: "Materiały",
+        Item.Type.QUEST_ITEM: (
+            "Przedmioty fabularne"
+        ),
     }
 
     shop_categories = {
         "Broń": [],
-        "Elementy pancerza": [],
+        "Tarcze": [],
+        "Hełmy": [],
+        "Pancerze": [],
+        "Spodnie": [],
+        "Rękawice": [],
+        "Buty": [],
         "Mikstury": [],
+        "Materiały": [],
+        "Przedmioty fabularne": [],
         "Pozostałe przedmioty": [],
     }
 
@@ -476,21 +531,12 @@ def shop_detail(request, character_id):
             "meets_level": meets_level,
         }
 
-        if item.type in weapon_types:
-            category_name = "Broń"
-
-        elif item.type in armor_types:
-            category_name = (
-                "Elementy pancerza"
+        category_name = (
+            category_by_item_type.get(
+                item.type,
+                "Pozostałe przedmioty",
             )
-
-        elif item.type == Item.Type.POTION:
-            category_name = "Mikstury"
-
-        else:
-            category_name = (
-                "Pozostałe przedmioty"
-            )
+        )
 
         shop_categories[
             category_name
@@ -517,7 +563,7 @@ def shop_detail(request, character_id):
             "error_message": (
                 error_message
             ),
-        }
+        },
     )
 
 

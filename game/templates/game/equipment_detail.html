@@ -4,7 +4,11 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Ekwipunek — {{ character.name }}</title>
 
@@ -22,13 +26,18 @@
 <body>
 <main class="page-container">
 
+    {% include "game/includes/game_navigation.html" with navigation_character=character active_page="equipment" %}
+
     <header class="page-header">
-        <p class="equipment-label">Wyposażenie bohatera</p>
+        <p class="equipment-label">
+            Wyposażenie bohatera
+        </p>
 
         <h1>Ekwipunek</h1>
 
         <p class="page-subtitle">
-            Postać: <strong>{{ character.name }}</strong>
+            Postać:
+            <strong>{{ character.name }}</strong>
         </p>
     </header>
 
@@ -46,10 +55,13 @@
                 <p class="slot-name">Broń</p>
 
                 {% if character.equipment.weapon %}
-                    <h3>{{ character.equipment.weapon.name }}</h3>
+                    <h3>
+                        {{ character.equipment.weapon.name }}
+                    </h3>
 
                     <p class="slot-stat">
-                        Moc: {{ character.equipment.weapon.power }}
+                        Moc:
+                        {{ character.equipment.weapon.power }}
                     </p>
 
                     <form
@@ -66,7 +78,9 @@
                         </button>
                     </form>
                 {% else %}
-                    <p class="empty-slot">Brak przedmiotu</p>
+                    <p class="empty-slot">
+                        Brak przedmiotu
+                    </p>
                 {% endif %}
             </article>
 
@@ -74,10 +88,13 @@
                 <p class="slot-name">Tarcza</p>
 
                 {% if character.equipment.shield %}
-                    <h3>{{ character.equipment.shield.name }}</h3>
+                    <h3>
+                        {{ character.equipment.shield.name }}
+                    </h3>
 
                     <p class="slot-stat">
-                        Obrona: {{ character.equipment.shield.power }}
+                        Obrona:
+                        {{ character.equipment.shield.power }}
                     </p>
 
                     <form
@@ -94,7 +111,9 @@
                         </button>
                     </form>
                 {% else %}
-                    <p class="empty-slot">Brak przedmiotu</p>
+                    <p class="empty-slot">
+                        Brak przedmiotu
+                    </p>
                 {% endif %}
             </article>
 
@@ -102,10 +121,13 @@
                 <p class="slot-name">Hełm</p>
 
                 {% if character.equipment.helmet %}
-                    <h3>{{ character.equipment.helmet.name }}</h3>
+                    <h3>
+                        {{ character.equipment.helmet.name }}
+                    </h3>
 
                     <p class="slot-stat">
-                        Obrona: {{ character.equipment.helmet.power }}
+                        Obrona:
+                        {{ character.equipment.helmet.power }}
                     </p>
 
                     <form
@@ -122,7 +144,9 @@
                         </button>
                     </form>
                 {% else %}
-                    <p class="empty-slot">Brak przedmiotu</p>
+                    <p class="empty-slot">
+                        Brak przedmiotu
+                    </p>
                 {% endif %}
             </article>
 
@@ -130,10 +154,13 @@
                 <p class="slot-name">Pancerz</p>
 
                 {% if character.equipment.armor %}
-                    <h3>{{ character.equipment.armor.name }}</h3>
+                    <h3>
+                        {{ character.equipment.armor.name }}
+                    </h3>
 
                     <p class="slot-stat">
-                        Obrona: {{ character.equipment.armor.power }}
+                        Obrona:
+                        {{ character.equipment.armor.power }}
                     </p>
 
                     <form
@@ -150,7 +177,9 @@
                         </button>
                     </form>
                 {% else %}
-                    <p class="empty-slot">Brak przedmiotu</p>
+                    <p class="empty-slot">
+                        Brak przedmiotu
+                    </p>
                 {% endif %}
             </article>
 
@@ -158,10 +187,13 @@
                 <p class="slot-name">Spodnie</p>
 
                 {% if character.equipment.leggings %}
-                    <h3>{{ character.equipment.leggings.name }}</h3>
+                    <h3>
+                        {{ character.equipment.leggings.name }}
+                    </h3>
 
                     <p class="slot-stat">
-                        Obrona: {{ character.equipment.leggings.power }}
+                        Obrona:
+                        {{ character.equipment.leggings.power }}
                     </p>
 
                     <form
@@ -178,7 +210,9 @@
                         </button>
                     </form>
                 {% else %}
-                    <p class="empty-slot">Brak przedmiotu</p>
+                    <p class="empty-slot">
+                        Brak przedmiotu
+                    </p>
                 {% endif %}
             </article>
 
@@ -186,10 +220,13 @@
                 <p class="slot-name">Rękawice</p>
 
                 {% if character.equipment.gloves %}
-                    <h3>{{ character.equipment.gloves.name }}</h3>
+                    <h3>
+                        {{ character.equipment.gloves.name }}
+                    </h3>
 
                     <p class="slot-stat">
-                        Obrona: {{ character.equipment.gloves.power }}
+                        Obrona:
+                        {{ character.equipment.gloves.power }}
                     </p>
 
                     <form
@@ -206,7 +243,9 @@
                         </button>
                     </form>
                 {% else %}
-                    <p class="empty-slot">Brak przedmiotu</p>
+                    <p class="empty-slot">
+                        Brak przedmiotu
+                    </p>
                 {% endif %}
             </article>
 
@@ -214,10 +253,13 @@
                 <p class="slot-name">Buty</p>
 
                 {% if character.equipment.boots %}
-                    <h3>{{ character.equipment.boots.name }}</h3>
+                    <h3>
+                        {{ character.equipment.boots.name }}
+                    </h3>
 
                     <p class="slot-stat">
-                        Obrona: {{ character.equipment.boots.power }}
+                        Obrona:
+                        {{ character.equipment.boots.power }}
                     </p>
 
                     <form
@@ -234,7 +276,9 @@
                         </button>
                     </form>
                 {% else %}
-                    <p class="empty-slot">Brak przedmiotu</p>
+                    <p class="empty-slot">
+                        Brak przedmiotu
+                    </p>
                 {% endif %}
             </article>
         </div>
@@ -251,15 +295,19 @@
                             {{ inventory_item.item.get_type_display }}
                         </p>
 
-                        <h3>{{ inventory_item.item.name }}</h3>
+                        <h3>
+                            {{ inventory_item.item.name }}
+                        </h3>
 
                         <p class="item-quantity">
-                            Liczba: {{ inventory_item.quantity }}
+                            Liczba:
+                            {{ inventory_item.quantity }}
                         </p>
 
                         {% if inventory_item.item.power %}
                             <p class="item-stat">
-                                Moc: {{ inventory_item.item.power }}
+                                Moc:
+                                {{ inventory_item.item.power }}
                             </p>
                         {% endif %}
                     </div>
@@ -272,7 +320,11 @@
                             {% csrf_token %}
 
                             <button
-                                class="button button-success equip-button"
+                                class="
+                                    button
+                                    button-success
+                                    equip-button
+                                "
                                 type="submit"
                             >
                                 Załóż
@@ -284,6 +336,7 @@
                         </p>
                     {% endif %}
                 </article>
+
             {% empty %}
                 <p class="empty-message">
                     Plecak jest pusty.
@@ -291,22 +344,6 @@
             {% endfor %}
         </div>
     </section>
-
-    <nav class="page-navigation">
-        <a
-            class="button button-success"
-            href="{% url 'game:shop_detail' character.id %}"
-        >
-            Sklep
-        </a>
-
-        <a
-            class="button button-secondary"
-            href="{% url 'game:character_list' %}"
-        >
-            ← Powrót do postaci
-        </a>
-    </nav>
 
 </main>
 </body>

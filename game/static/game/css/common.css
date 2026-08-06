@@ -30,6 +30,7 @@ body {
     padding: 40px 20px;
 
     color: var(--text);
+
     background:
         radial-gradient(
             circle at top,
@@ -84,10 +85,12 @@ a {
 
 .card-grid {
     display: grid;
+
     grid-template-columns: repeat(
         auto-fit,
         minmax(250px, 1fr)
     );
+
     gap: 18px;
 }
 
@@ -113,8 +116,10 @@ a {
 .information-list {
     display: grid;
     gap: 7px;
+
     margin: 0;
     padding: 0;
+
     list-style: none;
 }
 
@@ -132,6 +137,7 @@ a {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+
     margin-top: 18px;
 }
 
@@ -194,10 +200,21 @@ a {
     background-color: var(--red-dark);
 }
 
+.button-active {
+    color: #211d29;
+    background-color: var(--gold);
+}
+
+.button-active:hover {
+    color: #211d29;
+    background-color: var(--gold-light);
+}
+
 .button:disabled,
 .button-disabled {
     color: #817b88;
     background-color: #39343f;
+
     cursor: not-allowed;
     transform: none;
 }
@@ -206,10 +223,11 @@ a {
     margin: 20px 0;
     padding: 14px 16px;
 
+    color: #ffd8dc;
+
     border: 1px solid var(--red);
     border-radius: 10px;
 
-    color: #ffd8dc;
     background-color: rgba(207, 86, 100, 0.14);
 }
 
@@ -227,8 +245,24 @@ a {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 12px;
-    margin-top: 28px;
+    gap: 10px;
+
+    margin: 0 0 24px;
+    padding: 12px;
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    background-color: rgba(18, 16, 23, 0.94);
+    box-shadow: 0 10px 24px var(--shadow);
+}
+
+.top-navigation {
+    position: sticky;
+    top: 12px;
+    z-index: 20;
+
+    backdrop-filter: blur(8px);
 }
 
 .gold-value {

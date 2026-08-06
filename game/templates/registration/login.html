@@ -16,10 +16,15 @@
         rel="stylesheet"
         href="{% static 'game/css/common.css' %}"
     >
+
+    <link
+        rel="stylesheet"
+        href="{% static 'game/css/auth.css' %}"
+    >
 </head>
 
 <body>
-<main class="page-container">
+<main class="page-container auth-container">
 
     <header class="page-header">
         <p class="page-label">
@@ -34,7 +39,7 @@
         </p>
     </header>
 
-    <section class="panel">
+    <section class="panel auth-panel">
         {% if form.errors %}
             <p class="alert">
                 Podana nazwa użytkownika lub hasło
@@ -49,24 +54,42 @@
             </p>
         {% endif %}
 
-        <form method="post">
+        <form
+            class="auth-form"
+            method="post"
+        >
             {% csrf_token %}
 
-            <div class="information-list">
-                <div class="information-row">
+            <div class="auth-fields">
+                <div class="auth-field">
                     <label for="{{ form.username.id_for_label }}">
                         Nazwa użytkownika
                     </label>
 
-                    {{ form.username }}
+                    <input
+                        class="auth-input"
+                        id="{{ form.username.id_for_label }}"
+                        type="text"
+                        name="{{ form.username.html_name }}"
+                        value="{{ form.username.value|default:'' }}"
+                        autocomplete="username"
+                        required
+                    >
                 </div>
 
-                <div class="information-row">
+                <div class="auth-field">
                     <label for="{{ form.password.id_for_label }}">
                         Hasło
                     </label>
 
-                    {{ form.password }}
+                    <input
+                        class="auth-input"
+                        id="{{ form.password.id_for_label }}"
+                        type="password"
+                        name="{{ form.password.html_name }}"
+                        autocomplete="current-password"
+                        required
+                    >
                 </div>
             </div>
 
@@ -77,12 +100,23 @@
             >
 
             <button
-                class="button button-primary"
+                class="button button-primary auth-button"
                 type="submit"
             >
                 Zaloguj się
             </button>
         </form>
+
+        <p class="auth-alternative">
+            Nie masz jeszcze konta?
+
+            <a
+                class="auth-link"
+                href="{% url 'game:register' %}"
+            >
+                Zarejestruj się
+            </a>
+        </p>
     </section>
 
 </main>

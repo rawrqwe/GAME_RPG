@@ -18,12 +18,19 @@
 
     <link
         rel="stylesheet"
+        href="{% static 'game/css/common.css' %}"
+    >
+
+    <link
+        rel="stylesheet"
         href="{% static 'game/css/battle.css' %}"
     >
 </head>
 
 <body>
 <main class="battle-container">
+
+    {% include "game/includes/game_navigation.html" with navigation_character=battle.character active_page="battle" %}
 
     <header class="battle-header">
         <p class="battle-turn">
@@ -38,6 +45,7 @@
 
         <p class="battle-status">
             Status:
+
             <strong>
                 {{ battle.get_status_display }}
             </strong>
@@ -159,6 +167,7 @@
                             </strong>.
 
                             Koszt:
+
                             <strong>
                                 {{ turn_result.mana_cost }}
                                 many
@@ -327,6 +336,7 @@
                             </button>
                         </form>
                     </li>
+
                 {% empty %}
                     <li class="empty-potions">
                         Brak mikstur w plecaku.
@@ -345,6 +355,7 @@
                     Przeciwnik został pokonany.
                 </p>
             </section>
+
         {% elif battle.status == "LOSE" %}
             <section class="battle-end defeat">
                 <p class="battle-end-icon">☠</p>
@@ -357,24 +368,6 @@
             </section>
         {% endif %}
     {% endif %}
-
-    <footer class="battle-footer">
-        {% if battle.status == "ONGOING" %}
-            <a
-                class="back-link"
-                href="{% url 'game:battle_setup' battle.character.id %}"
-            >
-                ← Powrót do wyboru przeciwnika
-            </a>
-        {% else %}
-            <a
-                class="back-link"
-                href="{% url 'game:battle_setup' battle.character.id %}"
-            >
-                ⚔ Wybierz kolejnego przeciwnika
-            </a>
-        {% endif %}
-    </footer>
 
 </main>
 </body>
