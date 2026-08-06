@@ -1,10 +1,16 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import (
+    login_required,
+)
+from django.http import Http404
 from django.shortcuts import (
     get_object_or_404,
     redirect,
     render,
 )
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import (
+    require_POST,
+)
 
 from .combat import (
     get_character_skill,
@@ -28,17 +34,58 @@ from .shop import (
 
 MAX_ENEMY_LEVEL_ADVANTAGE = 1
 
+VALID_EQUIPMENT_SLOTS = {
+    "weapon",
+    "shield",
+    "helmet",
+    "armor",
+    "leggings",
+    "gloves",
+    "boots",
+}
 
+
+def get_owned_character(
+    request,
+    character_id,
+):
+    return get_object_or_404(
+        Character,
+        id=character_id,
+        owner=request.user,
+    )
+
+
+def get_owned_battle(
+    request,
+    battle_id,
+):
+    battles = Battle.objects.select_related(
+        "character",
+        "enemy",
+    )
+
+    return get_object_or_404(
+        battles,
+        id=battle_id,
+        character__owner=request.user,
+    )
+
+
+@login_required
 def character_list(request):
-    characters = Character.objects.all()
-    enemies = Enemy.objects.all()
+    characters = Character.objects.filter(
+        owner=request.user,
+    ).select_related(
+        "race",
+        "character_class",
+    )
 
     return render(
         request,
         "game/character_list.html",
         {
             "characters": characters,
-            "enemies": enemies,
         }
     )
 
@@ -106,15 +153,16 @@ def get_enemy_difficulty(
     }
 
 
+@login_required
 @require_POST
 def start_battle(
     request,
     character_id,
     enemy_id,
 ):
-    character = get_object_or_404(
-        Character,
-        id=character_id,
+    character = get_owned_character(
+        request,
+        character_id,
     )
 
     enemy = get_object_or_404(
@@ -166,10 +214,11 @@ def start_battle(
     )
 
 
+@login_required
 def battle_detail(request, battle_id):
-    battle = get_object_or_404(
-        Battle,
-        id=battle_id,
+    battle = get_owned_battle(
+        request,
+        battle_id,
     )
 
     session_key = (
@@ -184,7 +233,7 @@ def battle_detail(request, battle_id):
     potions = InventoryItem.objects.filter(
         character=battle.character,
         item__type=Item.Type.POTION,
-    )
+    ).select_related("item")
 
     skill = get_character_skill(
         battle.character,
@@ -202,10 +251,12 @@ def battle_detail(request, battle_id):
     )
 
 
+@login_required
+@require_POST
 def battle_attack(request, battle_id):
-    battle = get_object_or_404(
-        Battle,
-        id=battle_id,
+    battle = get_owned_battle(
+        request,
+        battle_id,
     )
 
     result = process_turn(battle)
@@ -222,11 +273,12 @@ def battle_attack(request, battle_id):
     )
 
 
+@login_required
 @require_POST
 def battle_skill(request, battle_id):
-    battle = get_object_or_404(
-        Battle,
-        id=battle_id,
+    battle = get_owned_battle(
+        request,
+        battle_id,
     )
 
     result = process_skill(battle)
@@ -243,14 +295,16 @@ def battle_skill(request, battle_id):
     )
 
 
+@login_required
+@require_POST
 def battle_use_potion(
     request,
     battle_id,
     inventory_item_id,
 ):
-    battle = get_object_or_404(
-        Battle,
-        id=battle_id,
+    battle = get_owned_battle(
+        request,
+        battle_id,
     )
 
     inventory_item = get_object_or_404(
@@ -277,10 +331,11 @@ def battle_use_potion(
     )
 
 
+@login_required
 def battle_setup(request, character_id):
-    character = get_object_or_404(
-        Character,
-        id=character_id,
+    character = get_owned_character(
+        request,
+        character_id,
     )
 
     enemies = Enemy.objects.all().order_by(
@@ -320,14 +375,15 @@ def battle_setup(request, character_id):
     )
 
 
+@login_required
 @require_POST
 def rest_character(
     request,
     character_id,
 ):
-    character = get_object_or_404(
-        Character,
-        id=character_id,
+    character = get_owned_character(
+        request,
+        character_id,
     )
 
     character.current_hp = (
@@ -356,10 +412,11 @@ def rest_character(
     )
 
 
+@login_required
 def shop_detail(request, character_id):
-    character = get_object_or_404(
-        Character,
-        id=character_id,
+    character = get_owned_character(
+        request,
+        character_id,
     )
 
     items = Item.objects.all().order_by(
@@ -464,14 +521,16 @@ def shop_detail(request, character_id):
     )
 
 
+@login_required
+@require_POST
 def shop_buy(
     request,
     character_id,
     item_id,
 ):
-    character = get_object_or_404(
-        Character,
-        id=character_id,
+    character = get_owned_character(
+        request,
+        character_id,
     )
 
     item = get_object_or_404(
@@ -497,14 +556,16 @@ def shop_buy(
     )
 
 
+@login_required
+@require_POST
 def shop_sell(
     request,
     character_id,
     item_id,
 ):
-    character = get_object_or_404(
-        Character,
-        id=character_id,
+    character = get_owned_character(
+        request,
+        character_id,
     )
 
     item = get_object_or_404(
@@ -530,20 +591,27 @@ def shop_sell(
     )
 
 
+@login_required
+@require_POST
 def equip_item(
     request,
     character_id,
     item_id,
 ):
-    character = get_object_or_404(
-        Character,
-        id=character_id,
+    character = get_owned_character(
+        request,
+        character_id,
     )
 
-    item = get_object_or_404(
-        Item,
-        id=item_id,
+    inventory_item = get_object_or_404(
+        InventoryItem.objects.select_related(
+            "item",
+        ),
+        character=character,
+        item_id=item_id,
     )
+
+    item = inventory_item.item
 
     try:
         character.equipment.equip_item(
@@ -561,15 +629,22 @@ def equip_item(
     )
 
 
+@login_required
+@require_POST
 def unequip_item(
     request,
     character_id,
     slot_name,
 ):
-    character = get_object_or_404(
-        Character,
-        id=character_id,
+    character = get_owned_character(
+        request,
+        character_id,
     )
+
+    if slot_name not in VALID_EQUIPMENT_SLOTS:
+        raise Http404(
+            "Nieprawidłowy slot wyposażenia."
+        )
 
     character.equipment.unequip_slot(
         slot_name,
@@ -581,19 +656,20 @@ def unequip_item(
     )
 
 
+@login_required
 def equipment_detail(
     request,
     character_id,
 ):
-    character = get_object_or_404(
-        Character,
-        id=character_id,
+    character = get_owned_character(
+        request,
+        character_id,
     )
 
     inventory_items = (
         InventoryItem.objects.filter(
             character=character,
-        )
+        ).select_related("item")
     )
 
     error_message = request.GET.get(

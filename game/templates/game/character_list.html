@@ -25,7 +25,27 @@
 
 <body>
 <main class="page-container">
+<nav class="account-navigation">
+    <span>
+        Zalogowany użytkownik:
+        <strong>{{ request.user.username }}</strong>
+    </span>
 
+    <form
+        class="logout-form"
+        method="post"
+        action="{% url 'logout' %}"
+    >
+        {% csrf_token %}
+
+        <button
+            class="button button-secondary"
+            type="submit"
+        >
+            Wyloguj się
+        </button>
+    </form>
+</nav>
     <header class="page-header">
         <p class="page-label">
             Panel bohaterów

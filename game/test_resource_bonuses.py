@@ -48,6 +48,9 @@ class ResourceBonusTests(TestCase):
             race=race,
             character_class=character_class,
         )
+        self.client.force_login(
+            owner,
+        )
 
         self.hp_armor = Item.objects.create(
             name="Pancerz testowy HP",

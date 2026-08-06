@@ -57,6 +57,9 @@ class ClassSkillTests(TestCase):
             race=race,
             character_class=character_class,
         )
+        self.client.force_login(
+            owner,
+        )
 
         self.enemy = Enemy.objects.create(
             name="Cel umiejętności",

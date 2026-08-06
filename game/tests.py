@@ -24,7 +24,9 @@ from .models import (
 
 class ProcessTurnTests(TestCase):
     def setUp(self):
-        owner = User.objects.create_user(username="tester")
+        self.owner = User.objects.create_user(
+            username="tester"
+        )
 
         race = Race.objects.create(
             name="Człowiek"
@@ -45,11 +47,14 @@ class ProcessTurnTests(TestCase):
         )
 
         self.character = Character.objects.create(
-            owner=owner,
+            owner=self.owner,
             name="Bohater",
             race=race,
             character_class=character_class,
             strength=10,
+        )
+        self.client.force_login(
+            self.owner,
         )
 
     @patch("game.combat.random.randint", return_value=0)

@@ -88,7 +88,41 @@
 .secondary-actions .button {
     width: 100%;
 }
+.account-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
 
+    margin-bottom: 24px;
+    padding: 14px 18px;
+
+    color: var(--text-muted);
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    background-color: var(--surface);
+}
+
+.account-navigation strong {
+    color: var(--text);
+}
+
+.logout-form {
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .account-navigation {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .logout-form .button {
+        width: 100%;
+    }
+}
 @media (max-width: 500px) {
     .secondary-actions {
         grid-template-columns: 1fr;
