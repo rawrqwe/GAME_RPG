@@ -4,14 +4,14 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
-from .combat import (
+from game.combat import (
     calculate_enemy_damage,
     calculate_player_damage,
     process_turn,
     use_potion,
 )
 
-from .models import (
+from game.models import (
     Battle,
     Character,
     CharacterClass,

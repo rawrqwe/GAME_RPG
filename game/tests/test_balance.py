@@ -3,8 +3,8 @@ from unittest.mock import patch
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-from .balance import simulate_battles
-from .models import (
+from game.balance import simulate_battles
+from game.models import (
     Character,
     CharacterClass,
     Enemy,

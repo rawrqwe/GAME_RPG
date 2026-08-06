@@ -4,11 +4,11 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
-from .combat import (
+from game.combat import (
     get_character_skill,
     process_skill,
 )
-from .models import (
+from game.models import (
     Battle,
     Character,
     CharacterClass,

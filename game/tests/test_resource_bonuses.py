@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
-from .combat import use_potion
-from .models import (
+from game.combat import use_potion
+from game.models import (
     Battle,
     Character,
     CharacterClass,

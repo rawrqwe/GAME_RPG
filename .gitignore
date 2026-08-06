@@ -1,9 +1,24 @@
-# Pliki tymczasowe tworzone przez Pythona
+# Pliki tymczasowe Pythona
 __pycache__/
 *.py[cod]
 
-# Lokalne środowisko wirtualne
+# Środowiska wirtualne
 venv/
+.venv/
 
-# Ustawienia edytora PyCharm
+# Lokalna baza i pliki Django
+db.sqlite3
+media/
+staticfiles/
+
+# Lokalne ustawienia i sekrety
+.env
+.env.*
+
+# Edytory
 .idea/
+.vscode/
+
+# System operacyjny
+.DS_Store
+Thumbs.db

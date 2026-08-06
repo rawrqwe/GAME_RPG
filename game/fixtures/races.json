@@ -1,0 +1,54 @@
+[
+  {
+    "model": "game.race",
+    "pk": 1,
+    "fields": {
+      "name": "Elf",
+      "description": "Długowieczna rasa związana z magią i naturą. Elfy są szybkie, inteligentne i doskonale posługują się łukiem oraz zaklęciami.",
+      "hp_bonus": 0,
+      "mana_bonus": 20,
+      "strength_bonus": 0,
+      "agility_bonus": 5,
+      "intelligence_bonus": 5
+    }
+  },
+  {
+    "model": "game.race",
+    "pk": 2,
+    "fields": {
+      "name": "Człowiek",
+      "description": "Wszechstronna rasa zdolna dostosować się do każdej roli. Ludzie rozwijają wszystkie statystyki w zrównoważony sposób.",
+      "hp_bonus": 10,
+      "mana_bonus": 10,
+      "strength_bonus": 2,
+      "agility_bonus": 2,
+      "intelligence_bonus": 2
+    }
+  },
+  {
+    "model": "game.race",
+    "pk": 3,
+    "fields": {
+      "name": "Ork",
+      "description": "Potężna i wytrzymała rasa polegająca przede wszystkim na sile, odporności i bezpośredniej walce.",
+      "hp_bonus": 25,
+      "mana_bonus": -10,
+      "strength_bonus": 6,
+      "agility_bonus": -2,
+      "intelligence_bonus": 3
+    }
+  },
+  {
+    "model": "game.race",
+    "pk": 4,
+    "fields": {
+      "name": "Krasnolud",
+      "description": "Wytrzymali wojownicy gór znani z siły, odporności i mistrzostwa w posługiwaniu się ciężkim wyposażeniem.",
+      "hp_bonus": 20,
+      "mana_bonus": 0,
+      "strength_bonus": 4,
+      "agility_bonus": -2,
+      "intelligence_bonus": 2
+    }
+  }
+]
