@@ -128,3 +128,33 @@
         grid-template-columns: 1fr;
     }
 }
+
+.character-list-actions {
+    display: flex;
+    justify-content: flex-end;
+
+    margin-bottom: 24px;
+}
+
+.messages {
+    margin-bottom: 24px;
+}
+
+.messages .alert {
+    margin: 0;
+}
+
+.alert.message-success {
+    color: #c9f5da;
+
+    border-color: var(--green);
+
+    background-color:
+        rgba(76, 175, 120, 0.14);
+}
+
+@media (max-width: 600px) {
+    .character-list-actions .button {
+        width: 100%;
+    }
+}

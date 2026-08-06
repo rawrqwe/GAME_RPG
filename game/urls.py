@@ -2,10 +2,11 @@ from django.urls import path
 
 from . import views
 
+
 app_name = "game"
 
-urlpatterns = [
 
+urlpatterns = [
     path(
         "register/",
         views.register,
@@ -16,6 +17,12 @@ urlpatterns = [
         "",
         views.character_list,
         name="character_list",
+    ),
+
+    path(
+        "characters/create/",
+        views.character_create,
+        name="character_create",
     ),
 
     path(

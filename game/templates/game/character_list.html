@@ -63,7 +63,30 @@
             albo rozpocznij nową walkę.
         </p>
     </header>
-
+    <div class="character-list-actions">
+    <a
+        class="button button-success"
+        href="{% url 'game:character_create' %}"
+    >
+        + Utwórz nową postać
+    </a>
+    </div>
+    {% if messages %}
+    <section class="messages">
+        {% for message in messages %}
+            <p
+                class="
+                    alert
+                    {% if message.tags %}
+                        message-{{ message.tags }}
+                    {% endif %}
+                "
+            >
+                {{ message }}
+            </p>
+        {% endfor %}
+    </section>
+    {% endif %}
     <section class="panel">
         <h2>Wybierz postać</h2>
 

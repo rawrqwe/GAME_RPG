@@ -19,7 +19,10 @@ from .combat import (
     process_turn,
     use_potion,
 )
-from .forms import RegistrationForm
+from .forms import (
+    CharacterCreateForm,
+    RegistrationForm,
+)
 from .models import (
     Battle,
     Character,
@@ -66,12 +69,13 @@ def register(request):
 
             messages.success(
                 request,
-                "Konto zostało utworzone "
-                "poprawnie.",
+                "Konto zostało utworzone. "
+                "Teraz utwórz swoją pierwszą "
+                "postać.",
             )
 
             return redirect(
-                "game:character_list"
+                "game:character_create"
             )
     else:
         form = RegistrationForm()
@@ -81,7 +85,7 @@ def register(request):
         "registration/register.html",
         {
             "form": form,
-        }
+        },
     )
 
 def get_owned_character(
@@ -127,7 +131,43 @@ def character_list(request):
             "characters": characters,
         }
     )
+@login_required
+def character_create(request):
+    if request.method == "POST":
+        form = CharacterCreateForm(
+            request.POST,
+            user=request.user,
+        )
 
+        if form.is_valid():
+            character = form.save(
+                commit=False,
+            )
+
+            character.owner = request.user
+            character.save()
+
+            messages.success(
+                request,
+                f"Postać {character.name} "
+                f"została utworzona.",
+            )
+
+            return redirect(
+                "game:character_list"
+            )
+    else:
+        form = CharacterCreateForm(
+            user=request.user,
+        )
+
+    return render(
+        request,
+        "game/character_create.html",
+        {
+            "form": form,
+        },
+    )
 
 def can_character_fight_enemy(
     character,

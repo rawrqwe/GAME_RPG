@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Tworzenie postaci</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'game/css/common.css' %}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{% static 'game/css/character_create.css' %}"
+    >
+</head>
+
+<body>
+<main class="character-create-container">
+
+    <nav class="create-navigation top-navigation">
+        <a
+            class="button button-secondary"
+            href="{% url 'game:character_list' %}"
+        >
+            ← Twoje postacie
+        </a>
+
+        <form
+            class="logout-form"
+            method="post"
+            action="{% url 'logout' %}"
+        >
+            {% csrf_token %}
+
+            <button
+                class="button button-secondary"
+                type="submit"
+            >
+                Wyloguj się
+            </button>
+        </form>
+    </nav>
+
+    {% if messages %}
+        <section class="messages">
+            {% for message in messages %}
+                <p
+                    class="
+                        alert
+                        {% if message.tags %}
+                            message-{{ message.tags }}
+                        {% endif %}
+                    "
+                >
+                    {{ message }}
+                </p>
+            {% endfor %}
+        </section>
+    {% endif %}
+
+    <header class="page-header">
+        <p class="create-label">
+            Nowy bohater
+        </p>
+
+        <h1>Utwórz postać</h1>
+
+        <p class="page-subtitle">
+            Wybierz nazwę, rasę i klasę swojego bohatera.
+        </p>
+    </header>
+
+    <section class="character-create-panel">
+        <form
+            class="character-create-form"
+            method="post"
+        >
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% for field in form %}
+                <div class="form-field">
+                    <label for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+
+                    {{ field }}
+
+                    {% if field.errors %}
+                        <div class="field-errors">
+                            {% for error in field.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <div class="form-actions">
+                <button
+                    class="button button-success"
+                    type="submit"
+                >
+                    Utwórz postać
+                </button>
+
+                <a
+                    class="button button-secondary"
+                    href="{% url 'game:character_list' %}"
+                >
+                    Anuluj
+                </a>
+            </div>
+        </form>
+    </section>
+
+    <section class="creation-information">
+        <h2>Co wydarzy się dalej?</h2>
+
+        <ul>
+            <li>
+                Statystyki zostaną obliczone na podstawie
+                wybranej rasy i klasy.
+            </li>
+
+            <li>
+                Postać otrzyma broń startową swojej klasy.
+            </li>
+
+            <li>
+                Zostanie utworzony pusty ekwipunek bohatera.
+            </li>
+
+            <li>
+                Po utworzeniu wrócisz do listy swoich postaci.
+            </li>
+        </ul>
+    </section>
+
+</main>
+</body>
+</html>

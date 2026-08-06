@@ -45,7 +45,7 @@ class RegistrationTests(TestCase):
 
         self.assertRedirects(
             response,
-            reverse("game:character_list"),
+            reverse("game:character_create"),
         )
 
         user = User.objects.get(
